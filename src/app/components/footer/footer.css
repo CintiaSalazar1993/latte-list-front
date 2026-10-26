@@ -1,0 +1,2 @@
+   .pie { border-top: 1px solid var(--linea); padding: 22px 0; font-size: var(--t-sm); color: var(--tinta-tenue); }
+   .pie .contenedor { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }

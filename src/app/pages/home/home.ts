@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-landing',
+  selector: 'app-home',
   imports: [RouterLink],
-  templateUrl: './landing.html',
-  styleUrl: './landing.css',
+  templateUrl: './home.html',
+  styleUrl: './home.css',
 })
-export class Landing {
+export class Home {
   etiquetasEjemplo = [
     'Frente al mar',
     'Café de especialidad',

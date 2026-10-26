@@ -10,12 +10,12 @@ interface Enlace {
 }
 
 @Component({
-  selector: 'app-navbar',
+  selector: 'app-header',
   imports: [RouterLink, RouterLinkActive, RolPipe],
-  templateUrl: './navbar.html',
-  styleUrl: './navbar.css',
+  templateUrl: './header.html',
+  styleUrl: './header.css',
 })
-export class Navbar {
+export class Header {
   menuAbierto = signal(false);
 
   /** Los enlaces cambian según el rol: computed se recalcula solo cuando cambia la sesión. */

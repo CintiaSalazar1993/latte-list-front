@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard, invitadoGuard, rolGuard } from './guards/guards';
-import { Landing } from './pages/landing/landing';
+import { Home } from './pages/home/home';
 import { NoEncontrada } from './pages/errores/errores';
 import { AdminCafes } from './pages/admin-cafes/admin-cafes';
 import { Login } from './pages/login/login';
@@ -23,7 +23,7 @@ import { Dashboard } from './pages/dashboard/dashboard';
  * un guard (canActivate) que decide quién puede entrar.
  */
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', component: Landing, canActivate: [invitadoGuard] },
+  { path: '', pathMatch: 'full', component: Home, canActivate: [invitadoGuard] },
 
   // Públicas (solo sin sesión)
   { path: 'login', component: Login, canActivate: [invitadoGuard] },

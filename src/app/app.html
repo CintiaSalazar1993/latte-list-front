@@ -1,13 +1,14 @@
-<a class="saltar" href="#contenido">Saltar al contenido</a>
-<app-navbar />
-<main id="contenido" tabindex="-1">
-  <router-outlet />
-</main>
-<footer class="pie">
-  <div class="contenedor">
-    <span>LatteList · Cafés de Mar del Plata</span>
-    <span>UTN Mar del Plata · 2026</span>
+<a class="saltar" href="#main">Saltar al contenido</a>
+<div id="app-padre">
+  <div id="header">
+    <app-header />
   </div>
-</footer>
+  <main id="main" tabindex="-1">
+    <router-outlet />
+  </main>
+  <div id="footer">
+    <app-footer />
+  </div>
+</div>
 <app-toasts />
 <app-confirm-dialog />
