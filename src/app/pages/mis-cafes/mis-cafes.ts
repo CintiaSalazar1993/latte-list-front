@@ -27,6 +27,9 @@ export class MisCafes implements OnInit {
   cafes = signal<Cafe[]>([]);
   resenas = signal<Resena[]>([]);
   cargando = signal(true);
+  // RF25: ranking contra todos los cafés (solo cuentan los que tienen reseñas)
+  ranking = signal<Map<number, number>>(new Map());
+  totalRankeados = signal(0);
 
   totalResenas = computed(() => this.cafes().reduce((s, c) => s + c.cantidadResenas, 0));
   promedioGeneral = computed(() => {
@@ -62,7 +65,14 @@ export class MisCafes implements OnInit {
       type: 'doughnut',
       data: {
         labels: ['1 grano', '2 granos', '3 granos', '4 granos', '5 granos'],
-        datasets: [{ data: cuenta, backgroundColor: ['#e8d6d3', '#b9cfd1', '#7aa8ad', '#e9c48f', '#d58b2e'], borderWidth: 2, borderColor: '#fff' }],
+        datasets: [
+          {
+            data: cuenta,
+            backgroundColor: ['#e8d6d3', '#b9cfd1', '#7aa8ad', '#e9c48f', '#d58b2e'],
+            borderWidth: 2,
+            borderColor: '#fff',
+          },
+        ],
       },
       options: { cutout: '62%', plugins: { legend: { position: 'bottom' } } },
     };
@@ -94,6 +104,16 @@ export class MisCafes implements OnInit {
     // RF26: las reseñas de todos mis cafés en un solo pedido
     this.resenaService.getResenasRecibidas().subscribe({
       next: (data) => this.resenas.set(data),
+      error: (e) => this.notificaciones.error(mensajeError(e)),
+    });
+
+    // RF25: ranking contra todos los cafés (solo cuentan los que tienen reseñas)
+    this.cafeService.getCafes({ orden: 'puntuacion' }).subscribe({
+      next: (todos) => {
+        const conResenas = todos.filter((c) => c.puntuacionPromedio !== null);
+        this.ranking.set(new Map(conResenas.map((c, i) => [c.id, i + 1])));
+        this.totalRankeados.set(conResenas.length);
+      },
       error: (e) => this.notificaciones.error(mensajeError(e)),
     });
   }
