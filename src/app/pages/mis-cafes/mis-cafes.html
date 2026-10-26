@@ -65,6 +65,11 @@
               <div class="datos">
                 <a [routerLink]="['/cafes', c.id]" class="nombre">{{ c.nombre }}</a>
                 <span class="texto-chico texto-suave">{{ c.direccion }} | <app-costo [valor]="c.costoPromedio" /></span>
+                @if (ranking().get(c.id); as puesto) {
+                <span class="texto-chico"><strong>Puesto #{{ puesto }}</strong> de {{ totalRankeados() }} en LatteList</span>
+                } @else {
+                <span class="texto-chico texto-suave">Sin ranking: todavía no tiene reseñas</span>
+                }
               </div>
               <div class="acciones">
                 <a [routerLink]="['/cafes', c.id, 'editar']" class="btn btn-borde btn-chico">Editar</a>
