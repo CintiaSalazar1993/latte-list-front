@@ -5,7 +5,7 @@ import { NoEncontrada } from './pages/errores/errores';
 import { AdminCafes } from './pages/admin-cafes/admin-cafes';
 import { Login } from './pages/login/login';
 import { Registro } from './pages/registro/registro';
-import { Cafes } from './pages/cafes/cafes';
+import { CafeList } from './pages/cafe-list/cafe-list';
 import { CafeDetalle } from './pages/cafe-detalle/cafe-detalle';
 import { CafeForm } from './pages/cafe-form/cafe-form';
 import { MisCafes } from './pages/mis-cafes/mis-cafes';
@@ -30,7 +30,7 @@ export const routes: Routes = [
   { path: 'registro', component: Registro, canActivate: [invitadoGuard] },
 
   // Cafés (CRUD 1): ver = cualquier usuario logueado; crear/editar según rol
-  { path: 'cafes', component: Cafes, canActivate: [authGuard] },
+  { path: 'cafes', component: CafeList, canActivate: [authGuard] },
   { path: 'cafes/nuevo', component: CafeForm, canActivate: [rolGuard('DUENIO', 'ADMIN')] },
   { path: 'cafes/:id/editar', component: CafeForm, canActivate: [rolGuard('DUENIO')] }, // ruta paramétrica
   { path: 'cafes/:id', component: CafeDetalle, canActivate: [authGuard] }, // ruta paramétrica

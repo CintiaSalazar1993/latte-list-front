@@ -13,12 +13,12 @@ import { mensajeError } from '../../utils/errores';
 
 /** RF4, RF5, RF6, RF7 y RF24: listado de cafés con filtros, orden y café sorpresa. */
 @Component({
-  selector: 'app-cafes',
+  selector: 'app-cafe-list',
   imports: [FormsModule, RouterLink, CafeCard, EstadoVacio, EtiquetaPipe],
-  templateUrl: './cafes.html',
-  styleUrl: './cafes.css',
+  templateUrl: './cafe-list.html',
+  styleUrl: './cafe-list.css',
 })
-export class Cafes implements OnInit {
+export class CafeList implements OnInit {
   cafes = signal<Cafe[]>([]);
   cargando = signal(true);
   error = signal('');
