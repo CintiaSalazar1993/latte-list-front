@@ -1,0 +1,9 @@
+<div class="plato" [style.--tam.px]="tamanio()">
+  <div class="taza">
+    @if (logo() && !fallo()) {
+      <img [src]="logo()" [alt]="'Logo de ' + nombre()" (error)="fallo.set(true)" loading="lazy" />
+    } @else {
+      <span class="iniciales" aria-hidden="true">{{ iniciales() }}</span>
+    }
+  </div>
+</div>

@@ -1,0 +1,87 @@
+<section class="hero">
+  <div class="contenedor hero-grid">
+    <div class="texto">
+      <h1>¿A qué café vamos hoy?</h1>
+      <p class="bajada">
+        Los cafés de Mar del Plata en un solo lugar. Filtrá por lo que buscás, guardá tus favoritos en listas
+        y, cuando no te decidas, dejá que la ruleta elija por vos.
+      </p>
+      <div class="acciones">
+        <a routerLink="/registro" class="btn btn-acento">Crear cuenta gratis</a>
+        <a routerLink="/login" class="btn btn-borde claro">Ya tengo cuenta</a>
+      </div>
+    </div>
+
+    <div class="ilustracion" aria-hidden="true">
+      <svg viewBox="0 0 400 400" class="taza">
+        <defs>
+          <radialGradient id="cafe" cx="50%" cy="46%" r="55%">
+            <stop offset="0" stop-color="#e2b77d" />
+            <stop offset=".55" stop-color="#b9792b" />
+            <stop offset="1" stop-color="#6e4219" />
+          </radialGradient>
+        </defs>
+        <circle cx="200" cy="200" r="190" fill="#1a4b52" />
+        <circle cx="200" cy="200" r="168" fill="#f3f5f4" />
+        <circle cx="200" cy="200" r="150" fill="none" stroke="#dfe5e3" stroke-width="2" />
+        <path d="M330 168c40-6 52 58 6 68" fill="none" stroke="#f3f5f4" stroke-width="22" stroke-linecap="round" />
+        <circle cx="200" cy="200" r="122" fill="#fff" />
+        <circle cx="200" cy="200" r="106" fill="url(#cafe)" />
+        <g class="arte">
+          <path
+            d="M200 262c-40-26-62-48-62-76a31 31 0 0 1 62-6 31 31 0 0 1 62 6c0 28-22 50-62 76z"
+            fill="#f6e6cf"
+          />
+          <path d="M200 252c-26-18-40-34-40-52" fill="none" stroke="#c48a45" stroke-width="5" stroke-linecap="round" />
+          <path d="M200 252c26-18 40-34 40-52" fill="none" stroke="#c48a45" stroke-width="5" stroke-linecap="round" />
+          <path d="M200 180v74" stroke="#c48a45" stroke-width="5" stroke-linecap="round" />
+        </g>
+      </svg>
+      <div class="pin">
+        <svg viewBox="0 0 24 24" width="18"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z" fill="currentColor"/></svg>
+        Mar del Plata
+      </div>
+    </div>
+  </div>
+
+  <div class="ola" aria-hidden="true">
+    <svg viewBox="0 0 1440 60" preserveAspectRatio="none">
+      <path d="M0 30c120-20 240-20 360 0s240 20 360 0 240-20 360 0 240 20 360 0v30H0z" fill="var(--porcelana)" />
+    </svg>
+  </div>
+</section>
+
+<section class="contenedor seccion">
+  <h2>Encontrá el lugar justo</h2>
+  <p class="texto-suave intro">
+    Cada café tiene etiquetas. Combinalas para encontrar exactamente lo que buscás.
+  </p>
+  <ul class="nube" aria-label="Algunas etiquetas">
+    @for (e of etiquetasEjemplo; track e) {
+      <li class="chip">{{ e }}</li>
+    }
+  </ul>
+</section>
+
+<section class="contenedor seccion perfiles">
+  <article class="perfil-card">
+    <h3>Si salís a tomar café</h3>
+    <ul>
+      <li>Explorá y filtrá cafés por nombre, precio y etiquetas.</li>
+      <li>Puntuá cada visita: café, precio y atención.</li>
+      <li>Armá listas como "Para estudiar" o "Con vista al mar".</li>
+      <li>Usá la ruleta cuando no sepas a cuál ir.</li>
+    </ul>
+    <a routerLink="/registro" [queryParams]="{ tipo: 'CLIENTE' }" class="btn btn-borde btn-chico">Registrarme como cliente</a>
+  </article>
+
+  <article class="perfil-card oscuro">
+    <h3>Si tenés un café</h3>
+    <ul>
+      <li>Publicá tu café con logo, Instagram y etiquetas.</li>
+      <li>Leé lo que opinan tus clientes.</li>
+      <li>Seguí tus puntuaciones con gráficos.</li>
+    </ul>
+    <a routerLink="/registro" [queryParams]="{ tipo: 'DUENIO' }" class="btn btn-acento btn-chico">Registrar mi café</a>
+  </article>
+</section>

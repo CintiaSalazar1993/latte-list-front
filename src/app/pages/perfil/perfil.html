@@ -1,0 +1,66 @@
+<div class="contenedor pagina">
+  <div class="encabezado-pagina">
+    <h1>Mi perfil</h1>
+  </div>
+
+  @if (auth.usuario(); as u) {
+    <div class="grid">
+      <aside class="panel tarjeta-id">
+        <div class="avatar" aria-hidden="true">{{ u.nombre[0] }}{{ u.apellido[0] }}</div>
+        <h2>{{ u.nombre }} {{ u.apellido }}</h2>
+        <span class="chip">{{ u.tipoDeUsuario | rol }}</span>
+        <dl>
+          <div><dt>Email</dt><dd>{{ u.email }}</dd></div>
+          <div><dt>Miembro desde</dt><dd>{{ u.fechaAlta | date: 'longDate' }}</dd></div>
+        </dl>
+      </aside>
+
+      <div>
+        <form class="panel" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+          <h2>Datos personales</h2>
+          <div class="fila-campos">
+            <div class="campo">
+              <label for="nombre">Nombre</label>
+              <input id="nombre" class="input" formControlName="nombre" autocomplete="given-name" [ngClass]="{ invalido: invalido('nombre') }" />
+              @if (invalido('nombre')) {
+                <span class="error">Entre 2 y 30 caracteres.</span>
+              }
+            </div>
+            <div class="campo">
+              <label for="apellido">Apellido</label>
+              <input id="apellido" class="input" formControlName="apellido" autocomplete="family-name" [ngClass]="{ invalido: invalido('apellido') }" />
+              @if (invalido('apellido')) {
+                <span class="error">Entre 2 y 30 caracteres.</span>
+              }
+            </div>
+          </div>
+
+          <hr />
+          <h3>Cambiar contraseña</h3>
+          <p class="texto-chico texto-suave">Dejalo vacío si no querés cambiarla.</p>
+          <div class="fila-campos">
+            <div class="campo">
+              <label for="contrasena">Nueva contraseña</label>
+              <input id="contrasena" class="input" type="password" formControlName="contrasena" autocomplete="new-password" [ngClass]="{ invalido: invalido('contrasena') }" />
+              @if (invalido('contrasena')) {
+                <span class="error">Entre 6 y 20 caracteres.</span>
+              }
+            </div>
+            </div>
+
+          <button type="submit" class="btn" [disabled]="guardando() || form.pristine">
+            {{ guardando() ? 'Guardando…' : 'Guardar cambios' }}
+          </button>
+        </form>
+
+        @if (!auth.tieneRol('ADMIN')) {
+          <section class="panel peligro">
+            <h2>Eliminar mi cuenta</h2>
+            <p class="texto-suave">Esta acción es permanente y no se puede deshacer.</p>
+            <button type="button" class="btn btn-peligro" (click)="eliminarCuenta()">Eliminar mi cuenta</button>
+          </section>
+        }
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,3 @@
+:host { display: inline-flex; }
+.granos { display: inline-flex; gap: 1px; line-height: 0; }
+svg { transform: rotate(-18deg); }

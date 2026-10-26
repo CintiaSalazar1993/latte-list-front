@@ -1,0 +1,46 @@
+<div class="contenedor pagina">
+  <div class="encabezado-pagina">
+    <div>
+      <h1>Reseñas recibidas</h1>
+      <p>Lo que opinan los clientes de tus cafés.</p>
+    </div>
+  </div>
+
+  @if (cargando()) {
+    <div class="skeleton" style="height: 240px"></div>
+  } @else if (resenas().length === 0) {
+    <app-estado-vacio titulo="Todavía no recibiste reseñas" texto="Cuando un cliente puntúe alguno de tus cafés, la reseña aparece acá.">
+      <a routerLink="/mis-cafes" class="btn">Ver mis cafés</a>
+    </app-estado-vacio>
+  } @else {
+    <div class="resumen">
+      <span><strong>{{ visibles().length }}</strong> {{ visibles().length === 1 ? 'reseña' : 'reseñas' }}</span>
+      <span class="promedio"><app-granos [valor]="promedio()" [tamanio]="18" /> <strong>{{ promedio() | number: '1.1-1' }}</strong> de promedio</span>
+      <label class="filtro">
+        <span class="texto-chico texto-suave">Café</span>
+        <select class="input" [(ngModel)]="cafeElegido">
+          <option [ngValue]="0">Todos</option>
+          @for (c of cafes(); track c.id) {
+            <option [ngValue]="c.id">{{ c.nombre }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <div class="lista">
+      @for (r of visibles(); track r.id) {
+        <article class="resena">
+          <header>
+            <a [routerLink]="['/cafes', r.cafeId]" class="cafe">{{ r.cafeNombre }}</a>
+            <app-granos [valor]="r.puntuacionGeneral" [tamanio]="17" />
+          </header>
+          <p>{{ r.comentario }}</p>
+          <footer>
+            <span class="autor">{{ r.autor }}</span>
+            <span class="texto-chico texto-suave">{{ r.fecha | date: 'longDate' }}</span>
+          </footer>
+        </article>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,33 @@
+<a class="tarjeta" [routerLink]="['/cafes', cafe().id]">
+  <div class="cabeza">
+    <app-taza-logo [logo]="cafe().logo" [nombre]="cafe().nombre" [tamanio]="68" />
+    <div class="titulo">
+      <h3>{{ cafe().nombre }}</h3>
+      <p class="direccion">{{ cafe().direccion }}</p>
+    </div>
+  </div>
+
+  <div class="datos">
+    @if (cafe().puntuacionPromedio !== null) {
+      <span class="puntaje">
+        <app-granos [valor]="cafe().puntuacionPromedio" [tamanio]="16" />
+        <strong>{{ cafe().puntuacionPromedio | number: '1.1-1' }}</strong>
+        <span class="texto-suave">({{ cafe().cantidadResenas }})</span>
+      </span>
+    } @else {
+      <span class="texto-suave texto-chico">Sin reseñas todavía</span>
+    }
+    <app-costo [valor]="cafe().costoPromedio" />
+  </div>
+
+  @if (etiquetasVisibles().length) {
+    <div class="chips">
+      @for (e of etiquetasVisibles(); track e) {
+        <span class="chip">{{ e | etiqueta }}</span>
+      }
+      @if (restantes() > 0) {
+        <span class="chip mas">+{{ restantes() }}</span>
+      }
+    </div>
+  }
+</a>

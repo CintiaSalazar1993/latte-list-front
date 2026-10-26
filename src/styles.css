@@ -1,1 +1,317 @@
-/* You can add global styles to this file, and also import other style files */
+/* =========================================================================
+   LatteList · estilos globales
+   Paleta: el mar de Mar del Plata + el caramelo del café, sobre porcelana.
+   ========================================================================= */
+
+:root {
+  /* color */
+  --tinta: #24170f;          /* espresso: texto principal */
+  --tinta-suave: #5b4c42;    /* texto secundario */
+  --tinta-tenue: #8a7d73;
+  --porcelana: #eef1f0;      /* fondo de la app */
+  --espuma: #ffffff;         /* superficies */
+  --mar: #1e5a63;            /* primario */
+  --mar-hondo: #113a40;      /* superficies oscuras */
+  --mar-claro: #d9e8e9;      /* fondos de chips / hover */
+  --caramelo: #d58b2e;       /* acento: puntuaciones y destacados */
+  --caramelo-claro: #f6e6cf;
+  --peligro: #b3362c;
+  --peligro-claro: #f8e1de;
+  --exito: #2f7a4a;
+  --linea: #d6dcda;
+
+  /* tipografía */
+  --f-display: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', 'Segoe UI', system-ui, sans-serif;
+  --f-texto: 'Figtree', 'Segoe UI', system-ui, sans-serif;
+
+  /* escala (razón ~1.25) */
+  --t-xs: 0.78rem;
+  --t-sm: 0.9rem;
+  --t-md: 1rem;
+  --t-lg: 1.25rem;
+  --t-xl: 1.6rem;
+  --t-2xl: 2.1rem;
+  --t-3xl: clamp(2.4rem, 5vw + 1rem, 4.4rem);
+
+  /* forma */
+  --radio-s: 8px;
+  --radio-m: 14px;
+  --radio-l: 22px;
+  --sombra: 0 1px 2px rgb(36 23 15 / 0.06), 0 6px 20px -8px rgb(17 58 64 / 0.18);
+  --sombra-alta: 0 18px 50px -12px rgb(17 58 64 / 0.35);
+
+  --ancho: 1180px;
+  --gutter: clamp(16px, 4vw, 32px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--porcelana);
+  color: var(--tinta);
+  font-family: var(--f-texto);
+  font-size: var(--t-md);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--f-display);
+  line-height: 1.1;
+  margin: 0 0 0.5em;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+h1 { font-size: var(--t-2xl); font-weight: 800; }
+h2 { font-size: var(--t-xl); font-weight: 700; }
+h3 { font-size: var(--t-lg); font-weight: 700; }
+p { margin: 0 0 1em; text-wrap: pretty; }
+
+a { color: var(--mar); text-underline-offset: 3px; }
+a:hover { color: var(--mar-hondo); }
+
+img { max-width: 100%; display: block; }
+
+:focus-visible {
+  outline: 3px solid var(--caramelo);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+::selection { background: var(--caramelo-claro); }
+
+/* ---------- layout ---------- */
+.contenedor {
+  width: 100%;
+  max-width: var(--ancho);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.pagina {
+  padding-block: clamp(24px, 4vw, 48px) 64px;
+}
+
+.encabezado-pagina {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 28px;
+}
+.encabezado-pagina h1 { margin: 0; }
+.encabezado-pagina p { margin: 6px 0 0; color: var(--tinta-suave); max-width: 60ch; }
+
+.grilla {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+.panel {
+  min-width: 0; /* evita que un canvas de Chart.js ensanche la grilla */
+  background: var(--espuma);
+  border-radius: var(--radio-l);
+  box-shadow: var(--sombra);
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.texto-suave { color: var(--tinta-suave); }
+.texto-chico { font-size: var(--t-sm); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- botones ---------- */
+.btn {
+  --btn-bg: var(--mar);
+  --btn-fg: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 20px;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font: 600 var(--t-md) / 1 var(--f-texto);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s, transform 0.1s, border-color 0.15s;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--mar-hondo); color: #fff; }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.btn-acento { --btn-bg: var(--caramelo); --btn-fg: var(--tinta); }
+.btn-acento:hover { background: #c07a22; color: var(--tinta); }
+
+.btn-borde {
+  --btn-bg: transparent;
+  --btn-fg: var(--mar);
+  border-color: currentColor;
+}
+.btn-borde:hover { background: var(--mar-claro); color: var(--mar-hondo); }
+
+.btn-texto {
+  --btn-bg: transparent;
+  --btn-fg: var(--mar);
+  padding-inline: 12px;
+}
+.btn-texto:hover { background: var(--mar-claro); color: var(--mar-hondo); }
+
+.btn-peligro { --btn-bg: var(--peligro); }
+.btn-peligro:hover { background: #8f2a22; }
+
+.btn-peligro-texto { --btn-bg: transparent; --btn-fg: var(--peligro); padding-inline: 12px; }
+.btn-peligro-texto:hover { background: var(--peligro-claro); color: var(--peligro); }
+
+.btn-chico { min-height: 36px; padding: 0 14px; font-size: var(--t-sm); }
+
+.btn-icono {
+  width: 40px; min-height: 40px; padding: 0;
+  border-radius: 50%;
+}
+
+.acciones { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+/* ---------- formularios ---------- */
+.campo { display: flex; flex-direction: column; gap: 6px; margin-bottom: 18px; }
+.campo label, .etiqueta-campo { font-weight: 600; font-size: var(--t-sm); }
+.campo .ayuda { font-size: var(--t-xs); color: var(--tinta-tenue); }
+.campo .error { font-size: var(--t-xs); color: var(--peligro); font-weight: 600; }
+
+.input,
+select.input,
+textarea.input {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--linea);
+  border-radius: var(--radio-s);
+  background: var(--espuma);
+  color: var(--tinta);
+  font: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+textarea.input { min-height: 110px; resize: vertical; }
+.input:hover { border-color: #b8c3c0; }
+.input:focus { outline: none; border-color: var(--mar); box-shadow: 0 0 0 3px rgb(30 90 99 / 0.18); }
+.input.ng-invalid.ng-touched { border-color: var(--peligro); }
+
+.fila-campos { display: grid; gap: 0 16px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+
+.alerta {
+  padding: 12px 16px;
+  border-radius: var(--radio-s);
+  background: var(--peligro-claro);
+  color: var(--peligro);
+  font-weight: 600;
+  font-size: var(--t-sm);
+  margin-bottom: 18px;
+}
+.alerta-info { background: var(--mar-claro); color: var(--mar-hondo); }
+
+/* ---------- chips ---------- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--mar-claro);
+  color: var(--mar-hondo);
+  font-size: var(--t-xs);
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.chip-seleccionable {
+  border: 1.5px solid var(--linea);
+  background: var(--espuma);
+  color: var(--tinta-suave);
+  font-size: var(--t-sm);
+  padding: 6px 13px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.12s, border-color 0.12s, color 0.12s;
+}
+.chip-seleccionable:hover { border-color: var(--mar); color: var(--mar); }
+.chip-seleccionable[aria-pressed='true'] {
+  background: var(--mar);
+  border-color: var(--mar);
+  color: #fff;
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.costo {
+  font-family: var(--f-display);
+  font-weight: 800;
+  color: var(--caramelo);
+  letter-spacing: 0.04em;
+}
+.costo .apagado { color: var(--linea); }
+
+/* ---------- tabla ---------- */
+.tabla-wrap { overflow-x: auto; }
+.tabla { width: 100%; border-collapse: collapse; font-size: var(--t-sm); }
+.tabla th {
+  text-align: left; font-weight: 700; color: var(--tinta-suave);
+  padding: 10px 12px; border-bottom: 2px solid var(--linea);
+}
+.tabla td { padding: 12px; border-bottom: 1px solid var(--linea); vertical-align: middle; }
+.tabla tr:last-child td { border-bottom: 0; }
+
+@media (max-width: 720px) {
+  /* tabla -> tarjetas apiladas en celular */
+  .tabla-responsive thead { display: none; }
+  .tabla-responsive, .tabla-responsive tbody, .tabla-responsive tr, .tabla-responsive td { display: block; width: 100%; }
+  .tabla-responsive tr { padding: 12px 0; border-bottom: 1px solid var(--linea); }
+  .tabla-responsive td { border: 0; padding: 4px 0; }
+  .tabla-responsive td[data-label]::before {
+    content: attr(data-label) ': ';
+    font-weight: 700; color: var(--tinta-suave);
+  }
+}
+
+/* ---------- skeleton de carga ---------- */
+.skeleton {
+  background: linear-gradient(90deg, #e3e8e6 0%, #f3f5f4 50%, #e3e8e6 100%);
+  background-size: 200% 100%;
+  animation: brillo 1.3s ease-in-out infinite;
+  border-radius: var(--radio-m);
+}
+@keyframes brillo { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+/* ---------- transiciones del router (View Transitions API) ---------- */
+::view-transition-old(root),
+::view-transition-new(root) { animation-duration: 0.18s; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------- estado inválido (se activa con [ngClass] desde los formularios reactivos) ---------- */
+.input.invalido { border-color: var(--peligro); }

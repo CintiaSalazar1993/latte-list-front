@@ -1,0 +1,37 @@
+.lista {
+  display: flex;
+  flex-direction: column;
+  background: var(--espuma);
+  border-radius: var(--radio-l);
+  box-shadow: var(--sombra);
+  overflow: hidden;
+  border: 1.5px solid transparent;
+  transition: border-color 0.15s;
+}
+.lista:hover { border-color: var(--mar); }
+.lista.fav { background: var(--mar); color: #fff; }
+.lista.fav .texto-suave { color: #cfe0e2; }
+
+.cuerpo {
+  flex: 1;
+  display: block;
+  padding: 20px 20px 10px;
+  color: inherit;
+  text-decoration: none;
+}
+.cuerpo:hover { color: inherit; }
+
+.tazas { display: flex; margin-bottom: 14px; min-height: 46px; }
+.tazas app-taza-logo + app-taza-logo { margin-left: -12px; }
+.taza-vacia {
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 2px dashed var(--linea);
+}
+.fav .taza-vacia { border-color: rgb(255 255 255 / 0.4); }
+
+h2 { display: flex; align-items: center; gap: 8px; font-size: var(--t-lg); margin-bottom: 4px; }
+.fav h2 svg { color: var(--caramelo); }
+.cuerpo p { margin: 0; }
+
+.pie { padding: 8px 12px 12px; margin: 0; }
+.fav .pie { padding-left: 20px; }

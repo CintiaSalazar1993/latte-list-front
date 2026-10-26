@@ -1,0 +1,51 @@
+.volver { display: inline-block; margin-bottom: 16px; font-weight: 600; font-size: var(--t-sm); text-decoration: none; }
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(300px, 400px) 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.zona-ruleta { text-align: center; position: sticky; top: 86px; }
+.zona-ruleta h2 { font-size: var(--t-lg); margin-bottom: 4px; }
+.zona-ruleta app-ruleta { display: block; margin: 26px 0 20px; }
+.girar { width: 100%; }
+
+.resultado { min-height: 10px; }
+.ganador {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 12px;
+  border-radius: var(--radio-m);
+  background: var(--caramelo-claro);
+  text-align: left;
+  animation: llegar 0.35s ease-out;
+}
+.ganador div { flex: 1; display: flex; flex-direction: column; line-height: 1.3; min-width: 0; }
+.ganador strong { font-family: var(--f-display); font-size: 1.15rem; }
+@keyframes llegar { from { opacity: 0; transform: scale(0.95); } }
+
+.cafes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.fila {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--espuma);
+  border-radius: var(--radio-m);
+  padding: 10px 12px 10px 10px;
+  border: 1.5px solid transparent;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.fila.destacada { border-color: var(--caramelo); background: #fffaf2; }
+.enlace { flex: 1; display: flex; align-items: center; gap: 14px; color: inherit; text-decoration: none; min-width: 0; }
+.enlace:hover strong { color: var(--mar); }
+.datos { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.datos strong, .datos span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (max-width: 860px) {
+  .layout { grid-template-columns: 1fr; }
+  .zona-ruleta { position: static; }
+}

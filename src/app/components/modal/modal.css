@@ -1,0 +1,13 @@
+dialog {
+  border: 0; padding: 0; border-radius: var(--radio-l);
+  width: min(560px, calc(100vw - 24px));
+  max-height: calc(100dvh - 32px);
+  box-shadow: var(--sombra-alta);
+  color: var(--tinta);
+}
+dialog::backdrop { background: rgb(17 58 64 / 0.45); backdrop-filter: blur(2px); }
+dialog[open] { animation: entrar 0.18s ease-out; }
+@keyframes entrar { from { opacity: 0; transform: translateY(12px) scale(0.98); } }
+.caja { padding: clamp(18px, 4vw, 28px); }
+header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+h2 { margin: 0; font-size: var(--t-lg); }

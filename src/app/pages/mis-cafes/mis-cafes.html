@@ -1,0 +1,95 @@
+<div class="contenedor pagina">
+  <div class="encabezado-pagina">
+    <div>
+      <h1>Mis cafés</h1>
+      <p>Hola, {{ auth.usuario()?.nombre }}. Acá ves cómo les va a tus cafés.</p>
+    </div>
+    <a routerLink="/cafes/nuevo" class="btn">Publicar un café</a>
+  </div>
+
+  @if (cargando()) {
+    <div class="skeleton" style="height: 120px; margin-bottom: 20px"></div>
+    <div class="skeleton" style="height: 300px"></div>
+  } @else if (!cafes().length) {
+    <div class="panel">
+      <app-estado-vacio
+        titulo="Todavía no publicaste ningún café"
+        texto="Cargá el nombre, la dirección y las etiquetas, y los clientes van a poder encontrarlo y reseñarlo."
+      >
+        <a routerLink="/cafes/nuevo" class="btn">Publicar mi primer café</a>
+      </app-estado-vacio>
+    </div>
+  } @else {
+    <section class="kpis" aria-label="Resumen">
+      <div class="kpi">
+        <strong>{{ cafes().length }}</strong>
+        <span>{{ cafes().length === 1 ? 'café publicado' : 'cafés publicados' }}</span>
+      </div>
+      <div class="kpi">
+        <strong>{{ totalResenas() }}</strong>
+        <span>reseñas recibidas</span>
+      </div>
+      <div class="kpi destacado">
+        @if (promedioGeneral() !== null) {
+          <strong>{{ promedioGeneral() | number: '1.1-1' }}</strong>
+          <app-granos [valor]="promedioGeneral()" [tamanio]="18" />
+        } @else {
+          <strong>–</strong>
+        }
+        <span>puntuación promedio</span>
+      </div>
+    </section>
+
+    <section class="graficos">
+      <div class="panel">
+        <h2>Promedio por café</h2>
+        <app-grafico [config]="graficoPromedios()" [alto]="260" descripcion="Puntuación promedio de cada café" />
+      </div>
+      <div class="panel">
+        <h2>Cómo te puntúan</h2>
+        @if (resenas().length) {
+          <app-grafico [config]="graficoDistribucion()" [alto]="260" descripcion="Distribución de puntuaciones" />
+        } @else {
+          <p class="texto-suave">Cuando lleguen reseñas vas a ver la distribución acá.</p>
+        }
+      </div>
+    </section>
+
+    <section class="inferior">
+      <div class="panel">
+        <h2>Tus cafés</h2>
+        <ul class="mis-cafes">
+          @for (c of cafes(); track c.id) {
+            <li>
+              <app-taza-logo [logo]="c.logo" [nombre]="c.nombre" [tamanio]="56" />
+              <div class="datos">
+                <a [routerLink]="['/cafes', c.id]" class="nombre">{{ c.nombre }}</a>
+                <span class="texto-chico texto-suave">{{ c.direccion }} | <app-costo [valor]="c.costoPromedio" /></span>
+              </div>
+              <div class="acciones">
+                <a [routerLink]="['/cafes', c.id, 'editar']" class="btn btn-borde btn-chico">Editar</a>
+                <button type="button" class="btn btn-peligro-texto btn-chico" (click)="eliminar(c)">Eliminar</button>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <div class="panel">
+        <h2>Últimas reseñas</h2>
+        @for (r of ultimas(); track r.id) {
+          <article class="mini-resena">
+            <div class="fila">
+              <strong>{{ r.autor }}</strong>
+              <app-granos [valor]="r.puntuacionGeneral" [tamanio]="14" />
+            </div>
+            <p>{{ r.comentario }}</p>
+            <span class="texto-chico texto-suave">{{ r.cafeNombre }} | {{ r.fecha | date: 'mediumDate' }}</span>
+          </article>
+        } @empty {
+          <p class="texto-suave">Todavía nadie reseñó tus cafés.</p>
+        }
+      </div>
+    </section>
+  }
+</div>

@@ -1,0 +1,136 @@
+<div class="contenedor pagina">
+  <div class="encabezado-pagina">
+    <div>
+      <h1>Usuarios</h1>
+      <p>Buscá por nombre, apellido o email y filtrá por rol.</p>
+    </div>
+    <button type="button" class="btn" (click)="abrirAlta()">Nuevo usuario</button>
+  </div>
+
+  <div class="panel">
+    <div class="filtros">
+      <form class="busqueda" (ngSubmit)="traerUsuarios()">
+        <input class="input buscar" name="texto" type="search" placeholder="Buscar usuarios" aria-label="Buscar usuarios" [(ngModel)]="texto" />
+        <button class="btn btn-chico">Buscar</button>
+      </form>
+      <div class="chips" role="group" aria-label="Filtrar por rol">
+        @for (t of tipos; track t.texto) {
+          <button type="button" class="chip chip-seleccionable" [attr.aria-pressed]="tipo() === t.valor" (click)="elegirTipo(t.valor)">
+            {{ t.texto }}
+          </button>
+        }
+      </div>
+    </div>
+
+    @if (cargando()) {
+      <div class="skeleton" style="height: 220px"></div>
+    } @else if (usuarios().length) {
+      <div class="tabla-wrap">
+        <table class="tabla tabla-responsive">
+          <thead>
+            <tr>
+              <th scope="col">Nombre</th>
+              <th scope="col">Email</th>
+              <th scope="col">Rol</th>
+              <th scope="col">Alta</th>
+              <th scope="col"><span class="sr-only">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (u of usuarios(); track u.id) {
+              <tr>
+                <td>
+                  <strong>{{ u.nombre }} {{ u.apellido }}</strong>
+                  @if (esYo(u)) {
+                    <span class="chip yo">Vos</span>
+                  }
+                </td>
+                <td data-label="Email">{{ u.email }}</td>
+                <td data-label="Rol"><span class="rol" [attr.data-rol]="u.tipoDeUsuario">{{ u.tipoDeUsuario | rol }}</span></td>
+                <td data-label="Alta">{{ u.fechaAlta | date: 'dd/MM/yyyy' }}</td>
+                <td class="acciones-celda">
+                  <button type="button" class="btn btn-texto btn-chico" (click)="verDetalle(u)">Ver</button>
+                  @if (!esYo(u)) {
+                    <button type="button" class="btn btn-peligro-texto btn-chico" (click)="eliminar(u)">Eliminar</button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="texto-chico texto-suave total">{{ usuarios().length }} {{ usuarios().length === 1 ? 'usuario' : 'usuarios' }}</p>
+    } @else {
+      <app-estado-vacio titulo="No encontramos usuarios" texto="Probá con otra búsqueda o con otro rol." />
+    }
+  </div>
+</div>
+
+<!-- Alta de usuario -->
+<app-modal [abierto]="creando()" titulo="Nuevo usuario" (cerrar)="cerrarAlta()">
+  <form [formGroup]="form" (ngSubmit)="crear()" novalidate>
+    <div class="fila-campos">
+      <div class="campo">
+        <label for="u-nombre">Nombre</label>
+        <input id="u-nombre" class="input" formControlName="nombre" [ngClass]="{ invalido: invalido('nombre') }" />
+        @if (invalido('nombre')) {
+          <span class="error">Entre 2 y 30 caracteres.</span>
+        }
+      </div>
+      <div class="campo">
+        <label for="u-apellido">Apellido</label>
+        <input id="u-apellido" class="input" formControlName="apellido" [ngClass]="{ invalido: invalido('apellido') }" />
+        @if (invalido('apellido')) {
+          <span class="error">Entre 2 y 30 caracteres.</span>
+        }
+      </div>
+    </div>
+    <div class="campo">
+      <label for="u-email">Email</label>
+      <input id="u-email" class="input" type="email" formControlName="email" [ngClass]="{ invalido: invalido('email') }" />
+      @if (invalido('email')) {
+          <span class="error">Ingresá un email válido.</span>
+        }
+    </div>
+    <div class="fila-campos">
+      <div class="campo">
+        <label for="u-pass">Contraseña inicial</label>
+        <input id="u-pass" class="input" type="text" formControlName="contrasena" autocomplete="off" />
+        @if (invalido('contrasena')) {
+          <span class="error">Entre 6 y 20 caracteres.</span>
+        }
+      </div>
+      <div class="campo">
+        <label for="u-rol">Rol</label>
+        <select id="u-rol" class="input" formControlName="tipoDeUsuario">
+          <option value="CLIENTE">Cliente</option>
+          <option value="DUENIO">Dueño</option>
+          <option value="ADMIN">Administrador</option>
+        </select>
+      </div>
+    </div>
+    <div class="acciones" style="justify-content: flex-end">
+      <button type="button" class="btn btn-texto" (click)="cerrarAlta()">Cancelar</button>
+      <button type="submit" class="btn" [disabled]="guardando()">{{ guardando() ? 'Creando…' : 'Crear usuario' }}</button>
+    </div>
+  </form>
+</app-modal>
+
+<!-- Detalle -->
+<app-modal [abierto]="!!detalle()" titulo="Detalle del usuario" (cerrar)="cerrarDetalle()">
+  @if (detalle(); as d) {
+    <dl class="detalle">
+      <div><dt>ID</dt><dd>{{ d.id }}</dd></div>
+      <div><dt>Nombre</dt><dd>{{ d.nombre }} {{ d.apellido }}</dd></div>
+      <div><dt>Email</dt><dd>{{ d.email }}</dd></div>
+      <div><dt>Rol</dt><dd>{{ d.tipoDeUsuario | rol }}</dd></div>
+      <div><dt>Fecha de alta</dt><dd>{{ d.fechaAlta | date: 'longDate' }}</dd></div>
+    </dl>
+    <div class="acciones" style="justify-content: flex-end">
+      @if (!esYo(d)) {
+        <button type="button" class="btn btn-peligro-texto" (click)="eliminar(d)">Eliminar usuario</button>
+      }
+      <button type="button" class="btn" (click)="cerrarDetalle()">Cerrar</button>
+    </div>
+  }
+</app-modal>

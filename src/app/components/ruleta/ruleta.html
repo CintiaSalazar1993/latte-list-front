@@ -1,0 +1,34 @@
+<div class="ruleta">
+  <svg class="puntero" viewBox="0 0 40 40" aria-hidden="true">
+    <path d="M20 38L6 8a16 16 0 0 1 28 0z" fill="#24170f" />
+    <circle cx="20" cy="14" r="5" fill="#d58b2e" />
+  </svg>
+  <svg viewBox="0 0 320 320" class="rueda" aria-hidden="true">
+    <g
+      class="giro"
+      [style.transform]="'rotate(' + rotacion() + 'deg)'"
+      [class.girando]="girando()"
+      (transitionend)="alTerminar()"
+    >
+      @if (segmentos().length === 1) {
+        <circle [attr.cx]="160" [attr.cy]="160" [attr.r]="150" [attr.fill]="segmentos()[0].color" />
+      }
+      @for (s of segmentos(); track s.cafe.id) {
+        @if (segmentos().length > 1) {
+          <path [attr.d]="s.path" [attr.fill]="s.color" stroke="#fff" stroke-width="2" />
+        }
+        <text
+          [attr.x]="s.labelX"
+          [attr.y]="s.labelY"
+          [attr.fill]="s.colorTexto"
+          [attr.transform]="'rotate(' + s.rotacionLabel + ' ' + s.labelX + ' ' + s.labelY + ')'"
+          text-anchor="middle"
+          dominant-baseline="middle"
+        >{{ s.texto }}</text>
+      }
+    </g>
+    <circle cx="160" cy="160" r="30" fill="#fff" />
+    <circle cx="160" cy="160" r="22" fill="#b9792b" />
+    <circle cx="160" cy="160" r="152" fill="none" stroke="#24170f" stroke-width="4" />
+  </svg>
+</div>

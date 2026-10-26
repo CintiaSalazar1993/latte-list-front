@@ -1,0 +1,21 @@
+:host { display: block; }
+.tarjeta {
+  display: flex; flex-direction: column; gap: 14px;
+  height: 100%;
+  padding: 18px;
+  background: var(--espuma);
+  border-radius: var(--radio-l);
+  box-shadow: var(--sombra);
+  color: inherit; text-decoration: none;
+  border: 1.5px solid transparent;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.tarjeta:hover { border-color: var(--mar); color: inherit; box-shadow: var(--sombra-alta); }
+.cabeza { display: flex; gap: 14px; align-items: center; }
+.titulo { min-width: 0; }
+h3 { margin: 0 0 2px; font-size: 1.15rem; }
+.direccion { margin: 0; font-size: var(--t-sm); color: var(--tinta-suave); }
+.datos { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.puntaje { display: inline-flex; align-items: center; gap: 6px; font-size: var(--t-sm); }
+.chips { margin-top: auto; }
+.mas { background: transparent; border: 1px dashed var(--linea); color: var(--tinta-suave); }

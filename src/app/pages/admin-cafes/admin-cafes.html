@@ -1,0 +1,69 @@
+<div class="contenedor pagina">
+  <div class="encabezado-pagina">
+    <div>
+      <h1>Cafés</h1>
+      <p>Todos los cafés publicados. Podés dar de alta uno a nombre de un dueño o dar de baja cualquiera.</p>
+    </div>
+    <a routerLink="/cafes/nuevo" class="btn">Nuevo café</a>
+  </div>
+
+  <div class="panel">
+    <input class="input buscar" type="search" placeholder="Buscar por nombre, dirección o dueño" aria-label="Buscar cafés" [(ngModel)]="busqueda" />
+
+    @if (cargando()) {
+      <div class="skeleton" style="height: 240px"></div>
+    } @else if (visibles().length) {
+      <div class="tabla-wrap">
+        <table class="tabla tabla-responsive">
+          <thead>
+            <tr>
+              <th scope="col" [attr.aria-sort]="ariaSort('nombre')">
+                <button type="button" (click)="ordenarPor('nombre')">Café <span class="flecha">{{ flecha('nombre') }}</span></button>
+              </th>
+              <th scope="col" [attr.aria-sort]="ariaSort('duenioNombre')">
+                <button type="button" (click)="ordenarPor('duenioNombre')">Dueño <span class="flecha">{{ flecha('duenioNombre') }}</span></button>
+              </th>
+              <th scope="col">Costo</th>
+              <th scope="col" [attr.aria-sort]="ariaSort('puntuacionPromedio')">
+                <button type="button" (click)="ordenarPor('puntuacionPromedio')">Puntuación <span class="flecha">{{ flecha('puntuacionPromedio') }}</span></button>
+              </th>
+              <th scope="col" [attr.aria-sort]="ariaSort('cantidadResenas')">
+                <button type="button" (click)="ordenarPor('cantidadResenas')">Reseñas <span class="flecha">{{ flecha('cantidadResenas') }}</span></button>
+              </th>
+              <th scope="col"><span class="sr-only">Acciones</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (c of visibles(); track c.id) {
+              <tr>
+                <td>
+                  <div class="nombre">
+                    <app-taza-logo [logo]="c.logo" [nombre]="c.nombre" [tamanio]="40" />
+                    <div>
+                      <a [routerLink]="['/cafes', c.id]">{{ c.nombre }}</a>
+                      <div class="texto-chico texto-suave">{{ c.direccion }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td data-label="Dueño">{{ c.duenioNombre }}</td>
+                <td data-label="Costo"><app-costo [valor]="c.costoPromedio" /></td>
+                <td data-label="Puntuación">
+                  {{ c.puntuacionPromedio !== null ? (c.puntuacionPromedio | number: '1.1-1') : '–' }}
+                </td>
+                <td data-label="Reseñas">{{ c.cantidadResenas }}</td>
+                <td class="derecha">
+                  <a [routerLink]="['/cafes', c.id]" class="btn btn-texto btn-chico">Ver</a>
+                  <button type="button" class="btn btn-peligro-texto btn-chico" (click)="eliminar(c)">Dar de baja</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <app-estado-vacio titulo="No hay cafés para mostrar" [texto]="busqueda() ? 'Probá con otra búsqueda.' : 'Todavía nadie publicó un café.'">
+        <a routerLink="/cafes/nuevo" class="btn btn-borde">Nuevo café</a>
+      </app-estado-vacio>
+    }
+  </div>
+</div>

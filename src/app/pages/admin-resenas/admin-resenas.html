@@ -1,0 +1,65 @@
+<div class="contenedor pagina">
+  <div class="encabezado-pagina">
+    <div>
+      <h1>Reseñas</h1>
+      <p>Todas las reseñas del sistema. Filtrá por café o por puntaje y eliminá las que no correspondan.</p>
+    </div>
+  </div>
+
+  <form class="panel filtros-barra" (ngSubmit)="traerResenas()">
+    <div class="campo">
+      <label for="r-cafe">Café</label>
+      <select id="r-cafe" name="cafe" class="input" [(ngModel)]="cafeId">
+        <option [ngValue]="0">Todos</option>
+        @for (c of cafes(); track c.id) {
+          <option [ngValue]="c.id">{{ c.nombre }}</option>
+        }
+      </select>
+    </div>
+    <div class="campo">
+      <label for="r-min">Puntaje desde</label>
+      <select id="r-min" name="min" class="input" [(ngModel)]="puntajeMin">
+        <option [ngValue]="0">Cualquiera</option>
+        @for (p of puntajes; track p) {
+          <option [ngValue]="p">{{ p }}</option>
+        }
+      </select>
+    </div>
+    <div class="campo">
+      <label for="r-max">Puntaje hasta</label>
+      <select id="r-max" name="max" class="input" [(ngModel)]="puntajeMax">
+        <option [ngValue]="0">Cualquiera</option>
+        @for (p of puntajes; track p) {
+          <option [ngValue]="p">{{ p }}</option>
+        }
+      </select>
+    </div>
+    <div class="acciones">
+      <button class="btn">Filtrar</button>
+      <button class="btn btn-texto" type="button" (click)="limpiar()">Limpiar</button>
+    </div>
+  </form>
+
+  @if (cargando()) {
+    <div class="skeleton" style="height: 240px"></div>
+  } @else {
+    <p class="texto-suave texto-chico">{{ resenas().length }} {{ resenas().length === 1 ? 'reseña' : 'reseñas' }}</p>
+    <div class="lista">
+      @for (r of resenas(); track r.id) {
+        <article class="resena">
+          <header>
+            <a [routerLink]="['/cafes', r.cafeId]" class="cafe">{{ r.cafeNombre }}</a>
+            <app-granos [valor]="r.puntuacionGeneral" [tamanio]="17" />
+          </header>
+          <p>{{ r.comentario }}</p>
+          <footer>
+            <span class="autor">{{ r.autor }} · {{ r.fecha | date: 'shortDate' }}</span>
+            <button type="button" class="btn btn-peligro-texto btn-chico" (click)="eliminar(r)">Eliminar</button>
+          </footer>
+        </article>
+      } @empty {
+        <app-estado-vacio titulo="No hay reseñas con esos filtros" texto="Probá con otro café o rango de puntaje." />
+      }
+    </div>
+  }
+</div>

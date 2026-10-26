@@ -1,0 +1,62 @@
+/* estilos compartidos por login y registro */
+.marco {
+  min-height: calc(100dvh - 66px - 70px);
+  display: grid;
+  place-items: center;
+  padding: 32px var(--gutter);
+}
+
+.tarjeta {
+  width: min(460px, 100%);
+  background: var(--espuma);
+  border-radius: var(--radio-l);
+  box-shadow: var(--sombra-alta);
+  padding: clamp(24px, 5vw, 40px);
+}
+.tarjeta.ancha { width: min(560px, 100%); }
+
+h1 { margin-bottom: 4px; }
+.sub { color: var(--tinta-suave); margin-bottom: 26px; }
+
+.pie-form { margin: 18px 0 0; text-align: center; font-size: var(--t-sm); color: var(--tinta-suave); }
+
+.btn-bloque { width: 100%; }
+
+.campo-pass { position: relative; }
+.campo-pass .input { padding-right: 76px; }
+.ver {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  min-height: 34px;
+  padding: 0 10px;
+  background: none;
+  border: 0;
+  color: var(--mar);
+  font: 600 var(--t-xs) var(--f-texto);
+  cursor: pointer;
+  border-radius: 6px;
+}
+.ver:hover { background: var(--mar-claro); }
+
+.roles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; border: 0; padding: 0; }
+.roles legend { font-weight: 600; font-size: var(--t-sm); margin-bottom: 6px; }
+.rol {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px;
+  border: 1.5px solid var(--linea);
+  border-radius: var(--radio-m);
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.rol:hover { border-color: var(--mar); }
+.rol input { position: absolute; opacity: 0; }
+.rol strong { font-size: var(--t-md); }
+.rol span { font-size: var(--t-xs); color: var(--tinta-suave); }
+.rol:has(input:checked) { border-color: var(--mar); background: var(--mar-claro); }
+.rol:has(input:focus-visible) { outline: 3px solid var(--caramelo); outline-offset: 2px; }
+
+.demo { margin-top: 22px; padding-top: 18px; border-top: 1px dashed var(--linea); font-size: var(--t-xs); color: var(--tinta-tenue); }

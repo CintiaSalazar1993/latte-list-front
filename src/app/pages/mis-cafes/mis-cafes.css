@@ -1,0 +1,46 @@
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.kpi {
+  background: var(--espuma);
+  border-radius: var(--radio-l);
+  padding: 20px 22px;
+  box-shadow: var(--sombra);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+}
+.kpi strong { font: 800 2.4rem/1 var(--f-display); letter-spacing: -0.03em; }
+.kpi span { flex-basis: 100%; color: var(--tinta-suave); font-size: var(--t-sm); }
+.kpi.destacado { background: var(--mar); color: #fff; }
+.kpi.destacado span { color: #cfe0e2; }
+
+.graficos { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; margin-bottom: 20px; }
+.graficos h2, .inferior h2 { font-size: var(--t-lg); }
+
+.inferior { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; align-items: start; }
+
+.mis-cafes { list-style: none; margin: 0; padding: 0; }
+.mis-cafes li { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid var(--linea); }
+.mis-cafes li:first-child { border-top: 0; }
+.datos { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.nombre { font: 700 1.05rem var(--f-display); color: var(--tinta); text-decoration: none; }
+.nombre:hover { color: var(--mar); }
+
+.mini-resena { padding: 12px 0; border-top: 1px solid var(--linea); }
+.mini-resena:first-of-type { border-top: 0; padding-top: 0; }
+.mini-resena .fila { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.mini-resena p { margin: 4px 0; font-size: var(--t-sm); }
+
+@media (max-width: 900px) {
+  .graficos, .inferior { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+  .kpis { grid-template-columns: 1fr; }
+  .mis-cafes li { flex-wrap: wrap; }
+  .mis-cafes .acciones { width: 100%; padding-left: 70px; }
+}

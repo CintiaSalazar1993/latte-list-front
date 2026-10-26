@@ -1,0 +1,71 @@
+<div class="contenedor pagina">
+  <div class="encabezado-pagina">
+    <div>
+      <h1>Mis reseñas</h1>
+      @if (resenas().length) {
+        <p>
+          Escribiste {{ resenas().length }} {{ resenas().length === 1 ? 'reseña' : 'reseñas' }} sobre
+          {{ cafesDistintos() }} {{ cafesDistintos() === 1 ? 'café' : 'cafés' }}. Tu puntuación promedio es
+          {{ promedio() | number: '1.1-1' }}.
+        </p>
+      }
+    </div>
+  </div>
+
+  @if (cargando()) {
+    <div class="skeleton" style="height: 240px"></div>
+  } @else {
+    <div class="lista">
+      @for (r of resenas(); track r.id) {
+        <article class="resena">
+          <header>
+            <a [routerLink]="['/cafes', r.cafeId]" class="cafe">{{ r.cafeNombre }}</a>
+            <app-granos [valor]="r.puntuacionGeneral" [tamanio]="17" />
+          </header>
+          <p>{{ r.comentario }}</p>
+          <footer>
+            <span class="texto-chico texto-suave">{{ r.fecha | date: 'longDate' }}</span>
+            <span class="acciones">
+              <button type="button" class="btn btn-texto btn-chico" (click)="editar(r)">Editar</button>
+              <button type="button" class="btn btn-peligro-texto btn-chico" (click)="eliminar(r)">Eliminar</button>
+            </span>
+          </footer>
+        </article>
+      } @empty {
+        <app-estado-vacio titulo="Todavía no escribiste reseñas" texto="Entrá a un café que conozcas y contá cómo te fue.">
+          <a routerLink="/cafes" class="btn">Explorar cafés</a>
+        </app-estado-vacio>
+      }
+    </div>
+  }
+</div>
+
+<app-modal [abierto]="editando() !== null" [titulo]="'Editar reseña de ' + (editando()?.cafeNombre ?? '')" (cerrar)="cerrarModal()">
+  <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div class="bloque-editar">
+      <div class="campo">
+        <span class="etiqueta-campo">General</span>
+        <app-selector-granos formControlName="puntuacionGeneral" etiqueta="Puntuación general" />
+      </div>
+      <div class="campo">
+        <span class="etiqueta-campo">Precio</span>
+        <app-selector-granos formControlName="puntuacionPrecio" etiqueta="Puntuación de precio" />
+      </div>
+      <div class="campo">
+        <span class="etiqueta-campo">Atención</span>
+        <app-selector-granos formControlName="puntuacionAtencion" etiqueta="Puntuación de atención" />
+      </div>
+    </div>
+    <div class="campo">
+      <label for="comentario-edit">Comentario</label>
+      <textarea id="comentario-edit" class="input" formControlName="comentario" maxlength="255" [ngClass]="{ invalido: invalido('comentario') }"></textarea>
+      @if (invalido('comentario')) {
+        <span class="error">El comentario es obligatorio (máx. 255 caracteres).</span>
+      }
+    </div>
+    <div class="acciones" style="justify-content: flex-end">
+      <button type="button" class="btn btn-texto" (click)="cerrarModal()">Cancelar</button>
+      <button type="submit" class="btn" [disabled]="guardando()">{{ guardando() ? 'Guardando…' : 'Guardar cambios' }}</button>
+    </div>
+  </form>
+</app-modal>

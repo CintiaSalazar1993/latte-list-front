@@ -1,0 +1,57 @@
+<header class="barra">
+  <div class="contenedor interior">
+    <a class="marca" [routerLink]="auth.inicioPorRol()" aria-label="LatteList, ir al inicio">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <circle cx="32" cy="32" r="30" fill="#fff" opacity=".14" />
+        <circle cx="32" cy="32" r="21" fill="#f6e6cf" />
+        <circle cx="32" cy="32" r="17" fill="#b9792b" />
+        <path d="M32 41c-6-4-9-7-9-11a4.5 4.5 0 0 1 9-1 4.5 4.5 0 0 1 9 1c0 4-3 7-9 11z" fill="#f6e6cf" />
+      </svg>
+      <span>LatteList</span>
+    </a>
+
+    @if (auth.logueado()) {
+      <button
+        type="button"
+        class="hamburguesa"
+        [attr.aria-expanded]="menuAbierto()"
+        aria-controls="menu-principal"
+        (click)="alternarMenu()"
+      >
+        <span class="sr-only">{{ menuAbierto() ? 'Cerrar menú' : 'Abrir menú' }}</span>
+        <span class="lineas" [class.x]="menuAbierto()" aria-hidden="true"></span>
+      </button>
+
+      <nav id="menu-principal" class="menu" [class.abierto]="menuAbierto()" aria-label="Principal">
+        <ul class="enlaces" (click)="cerrarMenu()">
+          @for (e of enlaces(); track e.ruta) {
+            <li>
+              <a
+                [routerLink]="e.ruta"
+                routerLinkActive="activo"
+                [routerLinkActiveOptions]="{ exact: !!e.exacto }"
+                ariaCurrentWhenActive="page"
+              >{{ e.texto }}</a>
+            </li>
+          }
+        </ul>
+
+        <div class="usuario">
+          <a routerLink="/perfil" class="perfil" (click)="cerrarMenu()" routerLinkActive="activo" title="Mi perfil">
+            <span class="avatar" aria-hidden="true">{{ iniciales() }}</span>
+            <span class="quien">
+              <strong>{{ auth.usuario()?.nombre }}</strong>
+              <small>{{ auth.rol() | rol }}</small>
+            </span>
+          </a>
+          <button type="button" class="btn btn-chico salir" (click)="salir()">Cerrar sesión</button>
+        </div>
+      </nav>
+    } @else {
+      <nav class="invitado" aria-label="Cuenta">
+        <a routerLink="/login" class="btn btn-texto btn-chico claro">Iniciar sesión</a>
+        <a routerLink="/registro" class="btn btn-acento btn-chico">Crear cuenta</a>
+      </nav>
+    }
+  </div>
+</header>

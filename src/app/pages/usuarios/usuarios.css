@@ -1,0 +1,30 @@
+.filtros { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 18px; }
+.buscar { max-width: 320px; }
+
+.rol {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: var(--t-xs);
+  font-weight: 700;
+  background: var(--mar-claro);
+  color: var(--mar-hondo);
+}
+.rol[data-rol='DUENIO'] { background: var(--caramelo-claro); color: #6a3f12; }
+.rol[data-rol='ADMIN'] { background: var(--mar-hondo); color: #fff; }
+
+.yo { margin-left: 6px; background: var(--caramelo); color: var(--tinta); }
+
+.acciones-celda { text-align: right; white-space: nowrap; }
+.total { margin: 12px 0 0; }
+
+.detalle { margin: 0 0 18px; }
+.detalle div { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--linea); }
+.detalle dt { color: var(--tinta-suave); }
+.detalle dd { margin: 0; font-weight: 600; text-align: right; word-break: break-word; }
+
+@media (max-width: 720px) {
+  .buscar { max-width: none; }
+  .acciones-celda { text-align: left; }
+}
+.busqueda { display: flex; gap: 8px; }

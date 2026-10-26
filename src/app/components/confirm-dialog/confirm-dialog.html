@@ -1,0 +1,16 @@
+<app-modal [abierto]="!!pedido()" [titulo]="pedido()?.titulo ?? ''" (cerrar)="confirm.responder(false)">
+  @if (pedido(); as p) {
+    <p>{{ p.mensaje }}</p>
+    <div class="acciones fin">
+      <button type="button" class="btn btn-texto" (click)="confirm.responder(false)">Cancelar</button>
+      <button
+        type="button"
+        class="btn"
+        [class.btn-peligro]="p.peligroso"
+        (click)="confirm.responder(true)"
+      >
+        {{ p.textoConfirmar ?? 'Confirmar' }}
+      </button>
+    </div>
+  }
+</app-modal>

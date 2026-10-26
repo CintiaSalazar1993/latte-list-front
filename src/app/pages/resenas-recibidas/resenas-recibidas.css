@@ -1,0 +1,12 @@
+.lista { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+.resena { background: var(--espuma); border-radius: var(--radio-m); padding: 18px 20px 12px; box-shadow: var(--sombra); display: flex; flex-direction: column; }
+header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 8px; }
+.cafe { font: 700 1.1rem var(--f-display); text-decoration: none; color: var(--tinta); }
+.cafe:hover { color: var(--mar); }
+p { flex: 1; }
+footer { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.autor { font-size: var(--t-sm); color: var(--tinta-suave); }
+@media (max-width: 400px) { .lista { grid-template-columns: 1fr; } }
+.resumen { display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; margin-bottom: 20px; }
+.filtro { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.filtro .input { width: auto; min-height: 40px; }

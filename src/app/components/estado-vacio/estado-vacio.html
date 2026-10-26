@@ -1,0 +1,13 @@
+<div class="vacio">
+  <svg viewBox="0 0 120 80" aria-hidden="true">
+    <ellipse cx="60" cy="66" rx="50" ry="10" fill="#dfe5e3" />
+    <path d="M28 22h56v18a28 28 0 0 1-56 0z" fill="#fff" stroke="#b9c4c1" stroke-width="3" />
+    <path d="M84 28h6a9 9 0 0 1 0 18h-8" fill="none" stroke="#b9c4c1" stroke-width="3" />
+    <ellipse cx="56" cy="22" rx="28" ry="5" fill="#eef1f0" stroke="#b9c4c1" stroke-width="3" />
+  </svg>
+  <h3>{{ titulo() }}</h3>
+  @if (texto()) {
+    <p>{{ texto() }}</p>
+  }
+  <ng-content />
+</div>

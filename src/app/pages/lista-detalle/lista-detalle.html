@@ -1,0 +1,74 @@
+<div class="contenedor pagina">
+  <a routerLink="/listas" class="volver">‹ Mis listas</a>
+
+  @if (cargando()) {
+    <div class="skeleton" style="height: 320px"></div>
+  } @else if (error()) {
+    <app-estado-vacio titulo="No pudimos abrir esta lista" [texto]="error()">
+      <a routerLink="/listas" class="btn">Volver a mis listas</a>
+    </app-estado-vacio>
+  } @else if (lista(); as l) {
+    <div class="encabezado-pagina">
+      <div>
+        <h1>{{ l.nombre }}</h1>
+        <p>{{ l.cantidadCafes }} {{ l.cantidadCafes === 1 ? 'café guardado' : 'cafés guardados' }}</p>
+      </div>
+    </div>
+
+    @if (l.cafes.length) {
+      <div class="layout">
+        <section class="panel zona-ruleta" aria-labelledby="titulo-ruleta">
+          <h2 id="titulo-ruleta">¿No te decidís?</h2>
+          <p class="texto-suave texto-chico">Girá la ruleta y elegimos uno de esta lista por vos.</p>
+
+          <app-ruleta [cafes]="l.cafes" (termino)="alTerminarGiro($event)" />
+
+          <button type="button" class="btn btn-acento girar" (click)="girar()" [disabled]="girando()">
+            {{ girando() ? 'Girando…' : elegido() ? 'Girar de nuevo' : 'Girar la ruleta' }}
+          </button>
+
+          <div class="resultado" aria-live="assertive">
+            @if (elegido(); as e) {
+              <div class="ganador">
+                <app-taza-logo [logo]="e.logo" [nombre]="e.nombre" [tamanio]="56" />
+                <div>
+                  <span class="texto-chico texto-suave">Hoy vas a</span>
+                  <strong>{{ e.nombre }}</strong>
+                  <span class="texto-chico">{{ e.direccion }}</span>
+                </div>
+                <a [routerLink]="['/cafes', e.id]" class="btn btn-chico">Ver café</a>
+              </div>
+            }
+          </div>
+        </section>
+
+        <section aria-label="Cafés de la lista">
+          <ul class="cafes">
+            @for (c of l.cafes; track c.id) {
+              <li class="fila" [class.destacada]="elegido()?.id === c.id">
+                <a [routerLink]="['/cafes', c.id]" class="enlace">
+                  <app-taza-logo [logo]="c.logo" [nombre]="c.nombre" [tamanio]="52" />
+                  <span class="datos">
+                    <strong>{{ c.nombre }}</strong>
+                    <span class="texto-chico texto-suave">{{ c.direccion }}</span>
+                  </span>
+                  <app-costo [valor]="c.costoPromedio" />
+                </a>
+                <button type="button" class="btn btn-peligro-texto btn-chico" (click)="quitar(c)" [attr.aria-label]="'Quitar ' + c.nombre">
+                  Quitar
+                </button>
+              </li>
+            }
+          </ul>
+        </section>
+      </div>
+    } @else {
+      <app-estado-vacio
+        titulo="Esta lista está vacía"
+        texto="Entrá a la ficha de cualquier café y usá «Guardar en lista»."
+      >
+        <a routerLink="/cafes" class="btn">Explorar cafés</a>
+      </app-estado-vacio>
+    }
+  }
+</div>

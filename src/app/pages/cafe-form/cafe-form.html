@@ -1,0 +1,143 @@
+<div class="contenedor pagina">
+  <a [routerLink]="volver()" class="volver">‹ Volver</a>
+
+  <div class="encabezado-pagina">
+    <div>
+      <h1>{{ idCafe !== null ? 'Editar café' : 'Publicar un café' }}</h1>
+      <p>
+        @if (auth.tieneRol('ADMIN') && idCafe === null) {
+          Como administrador, elegís a qué dueño pertenece el café.
+        } @else {
+          Los datos que cargues los ven todos los usuarios de LatteList.
+        }
+      </p>
+    </div>
+  </div>
+
+  @if (cargando()) {
+    <div class="skeleton" style="height: 420px"></div>
+  } @else {
+    <form class="layout" [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+      <div class="panel">
+        @if (error()) {
+          <div class="alerta" role="alert">{{ error() }}</div>
+        }
+
+        @if (auth.tieneRol('ADMIN') && idCafe === null) {
+          <div class="campo">
+            <label for="duenio">Dueño</label>
+            <select id="duenio" class="input" formControlName="idDuenio">
+              <option [ngValue]="null" disabled>Elegí un dueño</option>
+              @for (d of duenios(); track d.id) {
+                <option [ngValue]="d.id">{{ d.nombre }} {{ d.apellido }} ({{ d.email }})</option>
+              }
+            </select>
+            @if (invalido('idDuenio')) {
+              <span class="error">Elegí un dueño.</span>
+            }
+            @if (!duenios().length) {
+              <span class="ayuda">No hay usuarios con rol Dueño. Creá uno desde Usuarios.</span>
+            }
+          </div>
+        }
+
+        <div class="campo">
+          <label for="nombre">Nombre</label>
+          <input id="nombre" class="input" formControlName="nombre" maxlength="50" [ngClass]="{ invalido: invalido('nombre') }" />
+          @if (invalido('nombre')) {
+              <span class="error">Entre 3 y 50 caracteres.</span>
+            }
+        </div>
+
+        <div class="campo">
+          <label for="direccion">Dirección</label>
+          <input id="direccion" class="input" formControlName="direccion" placeholder="Colón 3231" maxlength="60" [ngClass]="{ invalido: invalido('direccion') }" />
+          @if (form.controls.direccion.hasError('pattern') && form.controls.direccion.touched) {
+            <span class="error">Escribí la calle seguida de la altura, por ejemplo «Colón 3231».</span>
+          } @else if (invalido('direccion')) {
+            <span class="error">La dirección es obligatoria (3 a 60 caracteres).</span>
+          } @else {
+            <span class="ayuda">Calle y altura, sin piso ni localidad.</span>
+          }
+        </div>
+
+        <fieldset class="campo sin-borde">
+          <legend class="etiqueta-campo">Costo promedio</legend>
+          <div class="costos">
+            @for (c of costos; track c.valor) {
+              <label class="opcion-costo">
+                <input type="radio" formControlName="costoPromedio" [value]="c.valor" />
+                <span class="signo">{{ c.valor }}</span>
+                <span class="texto-chico">{{ c.label }}</span>
+              </label>
+            }
+          </div>
+          @if (invalido('costoPromedio')) {
+              <span class="error">Elegí un costo.</span>
+            }
+        </fieldset>
+
+        <div class="fila-campos">
+          <div class="campo">
+            <label for="logo">Logo (URL de imagen)</label>
+            <input id="logo" class="input" formControlName="logo" placeholder="https://…/logo.png" [ngClass]="{ invalido: invalido('logo') }" />
+            @if (form.controls.logo.hasError('pattern') && form.controls.logo.touched) {
+              <span class="error">Tiene que ser un link que termine en .png, .jpg, .jpeg, .svg o .webp.</span>
+            } @else {
+              <span class="ayuda">Opcional.</span>
+            }
+          </div>
+          <div class="campo">
+            <label for="instagram">Instagram</label>
+            <input id="instagram" class="input" formControlName="instagramUrl" placeholder="instagram.com/tucafe" [ngClass]="{ invalido: invalido('instagramUrl') }" />
+            @if (form.controls.instagramUrl.hasError('pattern') && form.controls.instagramUrl.touched) {
+              <span class="error">Usá el formato instagram.com/usuario.</span>
+            } @else {
+              <span class="ayuda">Opcional.</span>
+            }
+          </div>
+        </div>
+
+        <fieldset class="campo sin-borde">
+          <legend class="etiqueta-campo">Etiquetas</legend>
+          <p class="ayuda">Elegí todas las que describan al café. Son las que usan los clientes para filtrar.</p>
+          @for (g of grupos; track g.nombre) {
+            <div class="grupo">
+              <span class="texto-chico texto-suave">{{ g.nombre }}</span>
+              <div class="chips">
+                @for (e of g.etiquetas; track e) {
+                  <button
+                    type="button"
+                    class="chip chip-seleccionable"
+                    [attr.aria-pressed]="etiquetas().includes(e)"
+                    (click)="alternarEtiqueta(e)"
+                  >
+                    {{ e | etiqueta }}
+                  </button>
+                }
+              </div>
+            </div>
+          }
+          @if (intentado() && etiquetas().length === 0) {
+            <span class="error">Elegí al menos una etiqueta.</span>
+          }
+        </fieldset>
+      </div>
+
+      <aside class="lateral">
+        <div class="panel vista">
+          <span class="texto-chico texto-suave">Vista previa</span>
+          <app-taza-logo [logo]="logoValido() ? form.value.logo! : null" [nombre]="form.value.nombre || 'Tu café'" [tamanio]="120" />
+          <strong class="nombre-vista">{{ form.value.nombre || 'Tu café' }}</strong>
+          <span class="texto-chico texto-suave">{{ etiquetas().length }} etiquetas elegidas</span>
+        </div>
+        <div class="acciones botones">
+          <button type="submit" class="btn" [disabled]="guardando()">
+            {{ guardando() ? 'Guardando…' : idCafe !== null ? 'Guardar cambios' : 'Publicar café' }}
+          </button>
+          <a [routerLink]="volver()" class="btn btn-texto">Cancelar</a>
+        </div>
+      </aside>
+    </form>
+  }
+</div>

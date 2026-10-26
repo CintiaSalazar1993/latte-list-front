@@ -1,0 +1,80 @@
+<div class="contenedor pagina">
+  <div class="encabezado-pagina">
+    <div>
+      <h1>Mis listas</h1>
+      <p>Agrupá cafés como quieras. Desde cada lista podés girar la ruleta para que elija por vos.</p>
+    </div>
+    <button type="button" class="btn" (click)="abrirNueva()">Nueva lista</button>
+  </div>
+
+  @if (cargando()) {
+    <div class="grilla">
+      @for (i of [1, 2, 3]; track i) {
+        <div class="skeleton" style="height: 180px"></div>
+      }
+    </div>
+  } @else {
+    <div class="grilla">
+      @for (l of ordenadas(); track l.id) {
+        <article class="lista" [class.fav]="l.favoritos">
+          <a [routerLink]="['/listas', l.id]" class="cuerpo">
+            <div class="tazas" aria-hidden="true">
+              @for (c of l.cafes.slice(0, 4); track c.id) {
+                <app-taza-logo [logo]="c.logo" [nombre]="c.nombre" [tamanio]="46" />
+              } @empty {
+                <span class="taza-vacia"></span>
+              }
+            </div>
+            <h2>
+              @if (l.favoritos) {
+                <svg viewBox="0 0 24 24" width="20" aria-hidden="true">
+                  <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" fill="currentColor" />
+                </svg>
+              }
+              {{ l.nombre }}
+            </h2>
+            <p class="texto-chico texto-suave">
+              {{ l.cantidadCafes }} {{ l.cantidadCafes === 1 ? 'café' : 'cafés' }}
+              | creada el {{ l.fechaCreacion | date: 'shortDate' }}
+            </p>
+          </a>
+          @if (!l.favoritos) {
+            <div class="acciones pie">
+              <button type="button" class="btn btn-texto btn-chico" (click)="abrirRenombrar(l)">Renombrar</button>
+              <button type="button" class="btn btn-peligro-texto btn-chico" (click)="eliminar(l)">Eliminar</button>
+            </div>
+          } @else {
+            <p class="pie texto-chico texto-suave">Se crea sola y no se puede borrar.</p>
+          }
+        </article>
+      }
+    </div>
+
+    @if (listas().length <= 1) {
+      <app-estado-vacio
+        titulo="Armá tu primera lista"
+        texto="Por ejemplo: «Para estudiar», «Con vista al mar» o «Pendientes»."
+      >
+        <button type="button" class="btn btn-borde" (click)="abrirNueva()">Crear una lista</button>
+      </app-estado-vacio>
+    }
+  }
+</div>
+
+<app-modal [abierto]="editando() !== null" [titulo]="tituloModal()" (cerrar)="cerrarModal()">
+  <form [formGroup]="form" (ngSubmit)="guardar()" novalidate>
+    <div class="campo">
+      <label for="nombre-lista">Nombre de la lista</label>
+      <input id="nombre-lista" class="input" formControlName="nombre" maxlength="50" placeholder="Ej: Para estudiar" [ngClass]="{ invalido: invalido() }" />
+      @if (invalido()) {
+        <span class="error">El nombre es obligatorio (máx. 50 caracteres).</span>
+      }
+    </div>
+    <div class="acciones" style="justify-content: flex-end">
+      <button type="button" class="btn btn-texto" (click)="cerrarModal()">Cancelar</button>
+      <button type="submit" class="btn" [disabled]="guardando()">
+        {{ editando() === 'nueva' ? 'Crear lista' : 'Guardar nombre' }}
+      </button>
+    </div>
+  </form>
+</app-modal>

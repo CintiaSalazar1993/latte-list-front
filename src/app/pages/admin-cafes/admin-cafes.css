@@ -1,0 +1,12 @@
+.buscar { max-width: 320px; margin-bottom: 18px; }
+.nombre { display: flex; align-items: center; gap: 12px; }
+.nombre a { font-weight: 700; color: var(--tinta); text-decoration: none; }
+.nombre a:hover { color: var(--mar); }
+th button {
+  background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer;
+  display: inline-flex; gap: 4px; align-items: center;
+}
+th button:hover { color: var(--mar); }
+.flecha { font-size: 0.75em; }
+.derecha { text-align: right; white-space: nowrap; }
+@media (max-width: 720px) { .buscar { max-width: none; } .derecha { text-align: left; } }

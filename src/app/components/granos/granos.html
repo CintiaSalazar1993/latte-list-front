@@ -1,0 +1,13 @@
+<span class="granos" role="img" [attr.aria-label]="etiqueta()">
+  @for (relleno of rellenos(); track $index) {
+    <svg viewBox="0 0 24 24" [style.width.px]="tamanio()" aria-hidden="true">
+      <defs>
+        <linearGradient [attr.id]="idBase + $index">
+          <stop [attr.offset]="relleno" stop-color="#d58b2e" />
+          <stop [attr.offset]="relleno" stop-color="#d9dfdd" />
+        </linearGradient>
+      </defs>
+      <path [attr.d]="grano" [attr.fill]="'url(#' + idBase + $index + ')'" />
+    </svg>
+  }
+</span>

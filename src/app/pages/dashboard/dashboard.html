@@ -1,0 +1,81 @@
+<div class="contenedor pagina">
+  <div class="encabezado-pagina">
+    <div>
+      <h1>Panel de administración</h1>
+      <p>Cómo viene LatteList: usuarios, cafés y reseñas.</p>
+    </div>
+    <div class="acciones">
+      <a routerLink="/admin/usuarios" class="btn btn-borde">Gestionar usuarios</a>
+      <a routerLink="/admin/cafes" class="btn">Gestionar cafés</a>
+    </div>
+  </div>
+
+  @if (cargando()) {
+    <div class="skeleton" style="height: 120px; margin-bottom: 20px"></div>
+    <div class="skeleton" style="height: 320px"></div>
+  } @else {
+    <section class="kpis" aria-label="Totales">
+      <a routerLink="/admin/usuarios" class="kpi">
+        <strong>{{ usuarios().length }}</strong>
+        <span>usuarios</span>
+        <small>{{ porRol().CLIENTE }} clientes, {{ porRol().DUENIO }} dueños</small>
+      </a>
+      <a routerLink="/admin/cafes" class="kpi">
+        <strong>{{ cafes().length }}</strong>
+        <span>cafés publicados</span>
+      </a>
+      <div class="kpi">
+        <strong>{{ totalResenas() }}</strong>
+        <span>reseñas</span>
+      </div>
+      <div class="kpi destacado">
+        @if (promedio() !== null) {
+          <strong>{{ promedio() | number: '1.2-2' }}</strong>
+          <app-granos [valor]="promedio()" [tamanio]="16" />
+        } @else {
+          <strong>–</strong>
+        }
+        <span>puntuación promedio</span>
+      </div>
+    </section>
+
+    <section class="graficos">
+      <div class="panel ancho">
+        <h2>Altas de usuarios (últimos 6 meses)</h2>
+        <app-grafico [config]="graficoAltas()" [alto]="250" descripcion="Altas de usuarios por mes" />
+      </div>
+      <div class="panel">
+        <h2>Usuarios por rol</h2>
+        <app-grafico [config]="graficoRoles()" [alto]="250" descripcion="Usuarios por rol" />
+      </div>
+      <div class="panel">
+        <h2>Cafés por costo</h2>
+        <app-grafico [config]="graficoCostos()" [alto]="250" descripcion="Cantidad de cafés por costo promedio" />
+      </div>
+      <div class="panel">
+        <h2>Etiquetas más usadas</h2>
+        @if (cafes().length) {
+          <app-grafico [config]="graficoEtiquetas()" [alto]="250" descripcion="Etiquetas más frecuentes" />
+        } @else {
+          <p class="texto-suave">Sin cafés todavía.</p>
+        }
+      </div>
+      <div class="panel">
+        <h2>Mejor puntuados</h2>
+        <ol class="ranking">
+          @for (c of topCafes(); track c.id) {
+            <li>
+              <a [routerLink]="['/cafes', c.id]">{{ c.nombre }}</a>
+              <span class="puntaje">
+                <strong>{{ c.puntuacionPromedio | number: '1.1-1' }}</strong>
+                <span class="texto-chico texto-suave">({{ c.cantidadResenas }})</span>
+              </span>
+            </li>
+          } @empty {
+            <p class="texto-suave">Todavía no hay reseñas.</p>
+          }
+        </ol>
+      </div>
+    </section>
+  }
+</div>

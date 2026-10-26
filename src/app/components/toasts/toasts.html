@@ -1,0 +1,8 @@
+<div class="pila" aria-live="polite" aria-atomic="false">
+  @for (a of notificaciones.avisos(); track a.id) {
+    <div class="toast" [ngClass]="a.tipo" role="status">
+      <span>{{ a.texto }}</span>
+      <button type="button" aria-label="Cerrar aviso" (click)="notificaciones.cerrar(a.id)">×</button>
+    </div>
+  }
+</div>

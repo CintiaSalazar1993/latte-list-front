@@ -1,0 +1,201 @@
+<div class="contenedor pagina">
+  <a routerLink="/cafes" class="volver">‹ Volver a explorar</a>
+
+  @if (cargando()) {
+    <div class="skeleton" style="height: 260px; margin-top: 16px"></div>
+  } @else if (noEncontrado()) {
+    <app-estado-vacio titulo="Este café no existe" texto="Puede que lo hayan dado de baja.">
+      <a routerLink="/cafes" class="btn">Ver todos los cafés</a>
+    </app-estado-vacio>
+  } @else if (cafe(); as c) {
+    <!-- ===== cabecera ===== -->
+    <section class="ficha">
+      <app-taza-logo [logo]="c.logo" [nombre]="c.nombre" [tamanio]="150" />
+
+      <div class="info">
+        <h1>{{ c.nombre }}</h1>
+        <p class="linea-dato">
+          <a [href]="urlMapa()" target="_blank" rel="noopener">{{ c.direccion }}, Mar del Plata</a>
+        </p>
+        <div class="metricas">
+          <div class="metrica">
+            @if (c.puntuacionPromedio !== null) {
+              <strong class="numero">{{ c.puntuacionPromedio | number: '1.1-1' }}</strong>
+              <app-granos [valor]="c.puntuacionPromedio" [tamanio]="20" />
+              <span class="texto-suave texto-chico">{{ c.cantidadResenas }} {{ c.cantidadResenas === 1 ? 'reseña' : 'reseñas' }}</span>
+            } @else {
+              <span class="texto-suave">Todavía sin reseñas</span>
+            }
+          </div>
+          <div class="metrica">
+            <app-costo [valor]="c.costoPromedio" />
+            <span class="texto-suave texto-chico">Costo {{ c.costoPromedio | costo | lowercase }}</span>
+          </div>
+        </div>
+
+        <div class="chips">
+          @for (e of c.etiquetas; track e) {
+            <span class="chip">{{ e | etiqueta }}</span>
+          }
+        </div>
+
+        <p class="texto-chico texto-suave meta">
+          A cargo de {{ c.duenioNombre }}
+          @if (c.instagramUrl) {
+            <span aria-hidden="true">|</span>
+            <a [href]="c.instagramUrl.startsWith('http') ? c.instagramUrl : 'https://' + c.instagramUrl" target="_blank" rel="noopener">Instagram</a>
+          }
+        </p>
+      </div>
+
+      <div class="acciones-ficha">
+        @if (auth.tieneRol('CLIENTE')) {
+          <button
+            type="button"
+            class="btn"
+            [class.btn-borde]="!enFavoritos()"
+            [attr.aria-pressed]="enFavoritos()"
+            (click)="alternarFavorito()"
+          >
+            <svg viewBox="0 0 24 24" width="18" aria-hidden="true">
+              <path
+                d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"
+                [attr.fill]="enFavoritos() ? 'currentColor' : 'none'"
+                stroke="currentColor"
+                stroke-width="2"
+              />
+            </svg>
+            {{ enFavoritos() ? 'En favoritos' : 'Agregar a favoritos' }}
+          </button>
+
+          <div class="desplegable">
+            <button
+              type="button"
+              class="btn btn-borde"
+              [attr.aria-expanded]="menuListasAbierto()"
+              (click)="menuListasAbierto.set(!menuListasAbierto())"
+            >
+              Guardar en lista
+            </button>
+            @if (menuListasAbierto()) {
+              <div class="menu-listas" role="group" aria-label="Tus listas">
+                @for (l of listas(); track l.id) {
+                  @if (!l.favoritos) {
+                    <label class="opcion">
+                      <input type="checkbox" [checked]="estaEnLista(l)" (change)="alternarLista(l)" />
+                      {{ l.nombre }}
+                    </label>
+                  }
+                }
+                @if (listas().length <= 1) {
+                  <p class="texto-chico texto-suave">Todavía no creaste listas propias.</p>
+                }
+                <a routerLink="/listas" class="btn btn-texto btn-chico">Administrar mis listas</a>
+              </div>
+            }
+          </div>
+        }
+        @if (esMiCafe()) {
+          <a [routerLink]="['/cafes', c.id, 'editar']" class="btn">Editar café</a>
+          <button type="button" class="btn btn-peligro-texto" (click)="eliminarCafe()">Eliminar</button>
+        }
+        @if (auth.tieneRol('ADMIN')) {
+          <button type="button" class="btn btn-peligro" (click)="eliminarCafe()">Dar de baja el café</button>
+        }
+      </div>
+    </section>
+
+    <!-- ===== reseñas ===== -->
+    <section class="resenas">
+      <div class="col-resumen">
+        <div class="panel">
+          <h2>Cómo lo puntúan</h2>
+          @if (resenas().length) {
+            <app-grafico [config]="grafico()" [alto]="190" descripcion="Cantidad de reseñas por puntuación" />
+          } @else {
+            <p class="texto-suave">Cuando lleguen las primeras reseñas vas a ver la distribución acá.</p>
+          }
+        </div>
+
+        @if (auth.tieneRol('CLIENTE')) {
+          <form class="panel form-resena" [formGroup]="form" (ngSubmit)="publicarResena()" novalidate>
+            <h2>{{ yaResenado() ? 'Contá otra visita' : 'Dejá tu reseña' }}</h2>
+            @if (errorResena()) {
+              <div class="alerta" role="alert">{{ errorResena() }}</div>
+            }
+            <div class="campo">
+              <span class="etiqueta-campo">General</span>
+              <app-selector-granos formControlName="puntuacionGeneral" etiqueta="Puntuación general" />
+            </div>
+            <div class="campo">
+              <span class="etiqueta-campo">Precio</span>
+              <app-selector-granos formControlName="puntuacionPrecio" etiqueta="Puntuación de precio" />
+            </div>
+            <div class="campo">
+              <span class="etiqueta-campo">Atención</span>
+              <app-selector-granos formControlName="puntuacionAtencion" etiqueta="Puntuación de atención" />
+            </div>
+            <div class="campo">
+              <label for="comentario">Comentario</label>
+              <textarea id="comentario" class="input" formControlName="comentario" maxlength="255"
+                placeholder="¿Qué pediste? ¿Cómo estuvo?" [ngClass]="{ invalido: invalido('comentario') }"></textarea>
+              <span class="ayuda" [class.error]="largoComentario() > 240">{{ largoComentario() }}/255</span>
+              @if (invalido('comentario')) {
+                <span class="error">El comentario es obligatorio (máx. 255 caracteres).</span>
+              }
+            </div>
+            <button type="submit" class="btn" [disabled]="enviando()">
+              {{ enviando() ? 'Publicando…' : 'Publicar reseña' }}
+            </button>
+          </form>
+        }
+      </div>
+
+      <div class="col-lista">
+        <h2>Reseñas <span class="texto-suave">({{ resenas().length }})</span></h2>
+        @for (r of resenas(); track r.id) {
+          <article class="resena" [class.mia]="esMia(r)">
+            <header>
+              <div>
+                <strong>{{ r.autor }}</strong>
+                @if (esMia(r)) {
+                  <span class="chip chip-mia">Tuya</span>
+                }
+                <div class="texto-chico texto-suave">{{ r.fecha | date: 'longDate' }}</div>
+              </div>
+              <app-granos [valor]="r.puntuacionGeneral" [tamanio]="17" />
+            </header>
+            <p>{{ r.comentario }}</p>
+
+            @if (detalleAbierto() === r.id) {
+              @if (detalles()[r.id]; as d) {
+                <dl class="sub-puntajes">
+                  <div><dt>Precio</dt><dd><app-granos [valor]="d.puntuacionPrecio" [tamanio]="14" /></dd></div>
+                  <div><dt>Atención</dt><dd><app-granos [valor]="d.puntuacionAtencion" [tamanio]="14" /></dd></div>
+                </dl>
+              } @else {
+                <p class="texto-chico texto-suave">Cargando…</p>
+              }
+            }
+            <footer class="acciones">
+              <button type="button" class="btn btn-texto btn-chico" (click)="verDetalle(r)" [attr.aria-expanded]="detalleAbierto() === r.id">
+                {{ detalleAbierto() === r.id ? 'Ocultar detalle' : 'Ver precio y atención' }}
+              </button>
+              @if (esMia(r)) {
+                <a routerLink="/mis-resenas" class="btn btn-texto btn-chico">Editar</a>
+              }
+              @if (puedeBorrar(r)) {
+                <button type="button" class="btn btn-peligro-texto btn-chico" (click)="borrarResena(r)">Eliminar</button>
+              }
+            </footer>
+          </article>
+        } @empty {
+          <app-estado-vacio
+            titulo="Nadie reseñó este café todavía"
+            [texto]="auth.tieneRol('CLIENTE') ? 'Si ya fuiste, contá cómo te fue.' : ''"
+          />
+        }
+      </div>
+    </section>
+  }
+</div>

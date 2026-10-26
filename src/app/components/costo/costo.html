@@ -1,0 +1,5 @@
+<span class="costo" [attr.title]="'Costo ' + nombre()" [attr.aria-label]="'Costo ' + nombre()">
+  @for (i of [1, 2, 3]; track i) {
+    <span [class.apagado]="i > nivel()">$</span>
+  }
+</span>
