@@ -8,10 +8,12 @@ import { COLORES_GRAFICO, Grafico } from '../../components/grafico/grafico';
 import { Granos } from '../../components/granos/granos';
 import { TazaLogo } from '../../components/taza-logo/taza-logo';
 import { Cafe } from '../../models/Cafe';
+import { MetricasDuenio } from '../../models/Metricas';
 import { Resena } from '../../models/Resena';
 import { AuthService } from '../../services/auth.service';
 import { CafeService } from '../../services/cafe.service';
 import { ConfirmService } from '../../services/confirm.service';
+import { MetricasService } from '../../services/metricas.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { ResenaService } from '../../services/resena.service';
 import { mensajeError } from '../../utils/errores';
@@ -27,15 +29,20 @@ export class MisCafes implements OnInit {
   cafes = signal<Cafe[]>([]);
   resenas = signal<Resena[]>([]);
   cargando = signal(true);
-  // RF25: ranking contra todos los cafés (solo cuentan los que tienen reseñas)
-  ranking = signal<Map<number, number>>(new Map());
-  totalRankeados = signal(0);
 
-  totalResenas = computed(() => this.cafes().reduce((s, c) => s + c.cantidadResenas, 0));
-  promedioGeneral = computed(() => {
-    const r = this.resenas();
-    return r.length ? r.reduce((s, x) => s + x.puntuacionGeneral, 0) / r.length : null;
-  });
+  // RF25: las métricas (totales y ranking) las calcula el back
+  metricas = signal<MetricasDuenio | null>(null);
+  ranking = computed(
+    () =>
+      new Map<number, number>(
+        (this.metricas()?.cafes ?? [])
+          .filter((c) => c.posicion !== null)
+          .map((c) => [c.cafeId, c.posicion!] as [number, number]),
+      ),
+  );
+  totalRankeados = computed(() => this.metricas()?.totalRankeados ?? 0);
+  totalResenas = computed(() => this.metricas()?.totalResenas ?? 0);
+  promedioGeneral = computed(() => this.metricas()?.promedioGeneral ?? null);
   ultimas = computed(() => this.resenas().slice(0, 5)); // el backend ya las manda de la más nueva a la más vieja
 
   graficoPromedios = computed<ChartConfiguration>(() => ({
@@ -82,6 +89,7 @@ export class MisCafes implements OnInit {
     public auth: AuthService,
     private cafeService: CafeService,
     private resenaService: ResenaService,
+    private metricasService: MetricasService,
     private notificaciones: NotificacionesService,
     private confirm: ConfirmService,
   ) {}
@@ -107,13 +115,9 @@ export class MisCafes implements OnInit {
       error: (e) => this.notificaciones.error(mensajeError(e)),
     });
 
-    // RF25: ranking contra todos los cafés (solo cuentan los que tienen reseñas)
-    this.cafeService.getCafes({ orden: 'puntuacion' }).subscribe({
-      next: (todos) => {
-        const conResenas = todos.filter((c) => c.puntuacionPromedio !== null);
-        this.ranking.set(new Map(conResenas.map((c, i) => [c.id, i + 1])));
-        this.totalRankeados.set(conResenas.length);
-      },
+    // RF25: totales y ranking calculados por el back
+    this.metricasService.getMisMetricas().subscribe({
+      next: (m) => this.metricas.set(m),
       error: (e) => this.notificaciones.error(mensajeError(e)),
     });
   }

@@ -13,25 +13,25 @@
   @if (cargando()) {
     <div class="skeleton" style="height: 120px; margin-bottom: 20px"></div>
     <div class="skeleton" style="height: 320px"></div>
-  } @else {
+  } @else if (metricas(); as m) {
     <section class="kpis" aria-label="Totales">
       <a routerLink="/admin/usuarios" class="kpi">
-        <strong>{{ usuarios().length }}</strong>
+        <strong>{{ m.totalUsuarios }}</strong>
         <span>usuarios</span>
-        <small>{{ porRol().CLIENTE }} clientes, {{ porRol().DUENIO }} dueños</small>
+        <small>{{ m.clientes }} clientes, {{ m.duenios }} dueños</small>
       </a>
       <a routerLink="/admin/cafes" class="kpi">
-        <strong>{{ cafes().length }}</strong>
+        <strong>{{ m.totalCafes }}</strong>
         <span>cafés publicados</span>
       </a>
       <div class="kpi">
-        <strong>{{ totalResenas() }}</strong>
+        <strong>{{ m.totalResenas }}</strong>
         <span>reseñas</span>
       </div>
       <div class="kpi destacado">
-        @if (promedio() !== null) {
-          <strong>{{ promedio() | number: '1.2-2' }}</strong>
-          <app-granos [valor]="promedio()" [tamanio]="16" />
+        @if (m.promedioGeneral !== null) {
+          <strong>{{ m.promedioGeneral | number: '1.2-2' }}</strong>
+          <app-granos [valor]="m.promedioGeneral" [tamanio]="16" />
         } @else {
           <strong>–</strong>
         }
@@ -54,7 +54,7 @@
       </div>
       <div class="panel">
         <h2>Etiquetas más usadas</h2>
-        @if (cafes().length) {
+        @if (m.totalCafes) {
           <app-grafico [config]="graficoEtiquetas()" [alto]="250" descripcion="Etiquetas más frecuentes" />
         } @else {
           <p class="texto-suave">Sin cafés todavía.</p>
@@ -63,9 +63,9 @@
       <div class="panel">
         <h2>Mejor puntuados</h2>
         <ol class="ranking">
-          @for (c of topCafes(); track c.id) {
+          @for (c of m.topCafes; track c.cafeId) {
             <li>
-              <a [routerLink]="['/cafes', c.id]">{{ c.nombre }}</a>
+              <a [routerLink]="['/cafes', c.cafeId]">{{ c.nombre }}</a>
               <span class="puntaje">
                 <strong>{{ c.puntuacionPromedio | number: '1.1-1' }}</strong>
                 <span class="texto-chico texto-suave">({{ c.cantidadResenas }})</span>
