@@ -24,6 +24,31 @@
 .opcion-costo:has(input:focus-visible) { outline: 3px solid var(--caramelo); outline-offset: 2px; }
 .signo { font: 800 1.3rem var(--f-display); color: var(--caramelo); }
 
+/* Zona para subir el logo */
+.zona-logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 92px;
+  padding: 14px 16px;
+  border: 2px dashed var(--linea);
+  border-radius: var(--radio-m);
+  background: var(--porcelana);
+  color: var(--tinta-suave);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.zona-logo:hover,
+.zona-logo.arrastrando { border-color: var(--caramelo); background: var(--caramelo-claro); }
+.zona-logo:focus-visible { outline: 3px solid var(--caramelo); outline-offset: 2px; }
+.zona-logo svg { flex-shrink: 0; color: var(--caramelo); }
+.zona-logo strong { color: var(--tinta); }
+.zona-logo img { width: 64px; height: 64px; flex-shrink: 0; border-radius: 50%; object-fit: cover; background: #fff; }
+.logo-acciones { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-top: 4px; }
+
 .grupo { margin: 12px 0; }
 .grupo > span { display: block; margin-bottom: 6px; }
 

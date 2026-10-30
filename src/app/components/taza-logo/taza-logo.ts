@@ -1,4 +1,4 @@
-import { Component, computed, input, signal } from '@angular/core';
+import { Component, computed, input, linkedSignal } from '@angular/core';
 
 /**
  * El logo del café enmarcado como una taza vista desde arriba.
@@ -15,7 +15,9 @@ export class TazaLogo {
   nombre = input.required<string>();
   tamanio = input(72);
 
-  fallo = signal(false);
+  // Si la imagen no carga, se muestran las iniciales. Vuelve a false cada vez que cambia el logo
+  // (por ejemplo, en la vista previa del formulario al pegar un link nuevo).
+  fallo = linkedSignal({ source: this.logo, computation: () => false });
   iniciales = computed(() =>
     this.nombre()
       .split(/\s+/)

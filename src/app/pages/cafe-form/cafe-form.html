@@ -77,25 +77,72 @@
             }
         </fieldset>
 
-        <div class="fila-campos">
-          <div class="campo">
-            <label for="logo">Logo (URL de imagen)</label>
-            <input id="logo" class="input" formControlName="logo" placeholder="https://…/logo.png" [ngClass]="{ invalido: invalido('logo') }" />
-            @if (form.controls.logo.hasError('pattern') && form.controls.logo.touched) {
-              <span class="error">Tiene que ser un link que termine en .png, .jpg, .jpeg, .svg o .webp.</span>
+        <!-- Logo: se puede elegir de la compu, arrastrar, pegar con Ctrl + V o usar un link -->
+        <div class="campo">
+          <span class="etiqueta-campo" id="lbl-logo">Logo <span class="texto-suave">(opcional)</span></span>
+          <button
+            type="button"
+            class="zona-logo"
+            [class.arrastrando]="arrastrando()"
+            aria-labelledby="lbl-logo"
+            aria-describedby="ayuda-logo"
+            (click)="selectorArchivo.click()"
+            (dragover)="alArrastrar($event)"
+            (dragleave)="arrastrando.set(false)"
+            (drop)="alSoltar($event)"
+          >
+            @if (procesandoLogo()) {
+              <span>Procesando imagen…</span>
+            } @else if (logoValido()) {
+              <img [src]="form.value.logo" alt="" />
+              <span><strong>Cambiar imagen</strong><br /><span class="texto-chico texto-suave">Elegí, arrastrá o pegá otra</span></span>
             } @else {
-              <span class="ayuda">Opcional.</span>
+              <svg viewBox="0 0 24 24" width="28" aria-hidden="true">
+                <path d="M12 16V4m0 0-4 4m4-4 4 4M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span><strong>Elegí una imagen</strong> o arrastrala acá<br /><span class="texto-chico texto-suave">También podés pegarla con Ctrl + V</span></span>
+            }
+          </button>
+          <input #selectorArchivo type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="alElegirArchivo($event)" />
+
+          @if (errorLogo()) {
+            <span class="error" role="alert">{{ errorLogo() }}</span>
+          } @else if (form.controls.logo.hasError('pattern') && form.controls.logo.touched) {
+            <span class="error">El link tiene que empezar con http:// o https://.</span>
+          } @else {
+            <span class="ayuda" id="ayuda-logo">PNG, JPG o WEBP. La achicamos sola a tamaño de logo.</span>
+          }
+
+          <div class="logo-acciones">
+            <button type="button" class="btn btn-texto btn-chico" (click)="mostrarLink.set(!mostrarLink())" [attr.aria-expanded]="mostrarLink()">
+              {{ mostrarLink() ? 'Ocultar link' : 'Prefiero pegar un link' }}
+            </button>
+            @if (form.value.logo) {
+              <button type="button" class="btn btn-peligro-texto btn-chico" (click)="quitarLogo()">Quitar logo</button>
             }
           </div>
-          <div class="campo">
-            <label for="instagram">Instagram</label>
-            <input id="instagram" class="input" formControlName="instagramUrl" placeholder="instagram.com/tucafe" [ngClass]="{ invalido: invalido('instagramUrl') }" />
-            @if (form.controls.instagramUrl.hasError('pattern') && form.controls.instagramUrl.touched) {
-              <span class="error">Usá el formato instagram.com/usuario.</span>
-            } @else {
-              <span class="ayuda">Opcional.</span>
-            }
-          </div>
+          @if (mostrarLink()) {
+            <label for="logo-link" class="sr-only">Link de la imagen</label>
+            <input
+              id="logo-link"
+              class="input"
+              type="url"
+              placeholder="https://…"
+              [value]="logoEsLink() ? form.value.logo : ''"
+              (input)="usarLink($any($event.target).value)"
+            />
+            <span class="ayuda">Tip: en la imagen, clic derecho → «Copiar dirección de imagen».</span>
+          }
+        </div>
+
+        <div class="campo">
+          <label for="instagram">Instagram</label>
+          <input id="instagram" class="input" formControlName="instagramUrl" placeholder="instagram.com/tucafe" [ngClass]="{ invalido: invalido('instagramUrl') }" />
+          @if (form.controls.instagramUrl.hasError('pattern') && form.controls.instagramUrl.touched) {
+            <span class="error">Usá el formato instagram.com/usuario.</span>
+          } @else {
+            <span class="ayuda">Opcional.</span>
+          }
         </div>
 
         <fieldset class="campo sin-borde">
