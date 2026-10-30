@@ -46,7 +46,17 @@
                 <span class="error">Entre 6 y 20 caracteres.</span>
               }
             </div>
-            </div>
+            <!-- Aparece solo cuando se escribe una contraseña nueva -->
+            @if (cambiaContrasena()) {
+              <div class="campo">
+                <label for="contrasena-actual">Contraseña actual</label>
+                <input id="contrasena-actual" class="input" type="password" formControlName="contrasenaActual" autocomplete="current-password" [ngClass]="{ invalido: invalido('contrasenaActual') }" />
+                @if (invalido('contrasenaActual')) {
+                  <span class="error">Escribí tu contraseña actual para poder cambiarla.</span>
+                }
+              </div>
+            }
+          </div>
 
           <button type="submit" class="btn" [disabled]="guardando() || form.pristine">
             {{ guardando() ? 'Guardando…' : 'Guardar cambios' }}

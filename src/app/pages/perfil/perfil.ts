@@ -24,6 +24,7 @@ export class Perfil {
     nombre: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]),
     apellido: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]),
     contrasena: new FormControl('', [Validators.minLength(6), Validators.maxLength(20)]),
+    contrasenaActual: new FormControl(''),
   });
 
   constructor(
@@ -41,25 +42,47 @@ export class Perfil {
     return !!c && c.invalid && c.touched;
   }
 
+  /** true si el usuario escribió una contraseña nueva (entonces se pide la actual). */
+  cambiaContrasena(): boolean {
+    return !!this.form.value.contrasena;
+  }
+
   onSubmit() {
+    const actual = this.form.controls.contrasenaActual;
+    // La contraseña actual solo es obligatoria si se quiere cambiar la contraseña
+    if (this.cambiaContrasena() && !actual.value) {
+      actual.setErrors({ required: true });
+    } else if (!this.cambiaContrasena()) {
+      actual.reset(''); // si borró la contraseña nueva, el campo actual deja de importar
+    }
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     const v = this.form.value;
     this.guardando.set(true);
-    this.usuarioService.putYo({ nombre: v.nombre ?? '', apellido: v.apellido ?? '', contrasena: v.contrasena || undefined }).subscribe({
-      next: (usuario) => {
-        this.auth.actualizarUsuario(usuario);
-        this.form.controls.contrasena.reset('');
-        this.notificaciones.ok('Perfil actualizado');
-        this.guardando.set(false);
-      },
-      error: (e) => {
-        this.notificaciones.error(mensajeError(e));
-        this.guardando.set(false);
-      },
-    });
+    this.usuarioService
+      .putYo({
+        nombre: v.nombre ?? '',
+        apellido: v.apellido ?? '',
+        contrasena: v.contrasena || undefined,
+        contrasenaActual: v.contrasena ? v.contrasenaActual || undefined : undefined,
+      })
+      .subscribe({
+        next: (usuario) => {
+          this.auth.actualizarUsuario(usuario);
+          this.form.controls.contrasena.reset('');
+          actual.reset('');
+          this.form.markAsPristine();
+          this.notificaciones.ok(v.contrasena ? 'Perfil y contraseña actualizados' : 'Perfil actualizado');
+          this.guardando.set(false);
+        },
+        error: (e) => {
+          this.notificaciones.error(mensajeError(e));
+          actual.reset(''); // si estaba mal, que la vuelva a escribir
+          this.guardando.set(false);
+        },
+      });
   }
 
   async eliminarCuenta() {

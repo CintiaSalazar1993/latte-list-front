@@ -23,6 +23,7 @@ export interface UsuarioUpdate {
   nombre: string;
   apellido: string;
   contrasena?: string;
+  contrasenaActual?: string; // obligatoria solo si se manda una contraseña nueva
 }
 
 export const ROLES_LABEL: Record<TipoDeUsuario, string> = {
