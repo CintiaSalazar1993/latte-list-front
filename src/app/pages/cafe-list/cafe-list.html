@@ -23,8 +23,17 @@
       <form class="campo" (ngSubmit)="traerCafes()">
         <label for="buscar">Nombre</label>
         <div class="buscador">
-          <input id="buscar" name="nombre" class="input" type="search" placeholder="Ej: Tostado" [(ngModel)]="nombre" />
-          <button class="btn btn-chico">Buscar</button>
+          <!-- Busca solo al dejar de escribir; con Enter busca al instante (ngSubmit del form) -->
+          <input
+            id="buscar"
+            name="nombre"
+            class="input"
+            type="search"
+            placeholder="Ej: Tostado"
+            autocomplete="off"
+            [(ngModel)]="nombre"
+            (ngModelChange)="escribirNombre($event)"
+          />
         </div>
       </form>
 

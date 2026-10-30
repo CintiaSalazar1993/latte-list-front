@@ -1,4 +1,5 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { CafeCard } from '../../components/cafe-card/cafe-card';
@@ -10,6 +11,7 @@ import { FiltrosCafesService } from '../../services/filtros-cafes.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { ETIQUETA_LABEL, GRUPOS_ETIQUETAS, COSTOS_CON_NOMBRE, TODAS_LAS_ETIQUETAS } from '../../utils/etiquetas';
 import { mensajeError } from '../../utils/errores';
+import { Subject, debounceTime, map } from 'rxjs';
 
 /** RF4, RF5, RF6, RF7 y RF24: listado de cafés con filtros, orden y café sorpresa. */
 @Component({
@@ -35,6 +37,11 @@ export class CafeList implements OnInit {
   etiquetas = signal<Etiqueta[]>([]);
   orden = signal<OrdenCafes>('nombre');
 
+  /** Cada letra que se escribe en el buscador pasa por acá (ver el constructor). */
+  private busqueda$ = new Subject<string>();
+  /** Número del último pedido de cafés: sirve para descartar respuestas viejas que lleguen tarde. */
+  private ultimoPedido = 0;
+
   cantidadFiltros = computed(() => (this.nombre().trim() ? 1 : 0) + (this.costo() ? 1 : 0) + this.etiquetas().length);
 
   constructor(
@@ -44,25 +51,43 @@ export class CafeList implements OnInit {
     private router: Router,
     private route: ActivatedRoute, // sirve para leer los filtros de la URL (?costo=$$&etiquetas=...)
     private filtrosCafes: FiltrosCafesService,
-  ) {}
+  ) {
+    // Buscar mientras escribís: espera 300 ms sin teclear y recién ahí pide los cafés.
+    // takeUntilDestroyed corta la suscripción cuando se sale de la página.
+    this.busqueda$
+      .pipe(
+        map((texto) => texto.trim()),
+        debounceTime(300),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => this.traerCafes());
+  }
 
   ngOnInit(): void {
     this.leerFiltrosDeUrl();
     this.traerCafes();
   }
 
+  /** Se llama desde el input del buscador en cada cambio. */
+  escribirNombre(texto: string) {
+    this.busqueda$.next(texto);
+  }
+
   traerCafes() {
     this.guardarFiltrosEnUrl();
     this.cargando.set(true);
     this.error.set('');
+    const pedido = ++this.ultimoPedido;
     this.cafeService
       .getCafes({ nombre: this.nombre().trim(), costo: this.costo(), etiquetas: this.etiquetas(), orden: this.orden() })
       .subscribe({
         next: (data) => {
+          if (pedido !== this.ultimoPedido) return; // llegó tarde: ya hay una búsqueda más nueva
           this.cafes.set(data);
           this.cargando.set(false);
         },
         error: (e) => {
+          if (pedido !== this.ultimoPedido) return;
           this.error.set(mensajeError(e));
           this.cargando.set(false);
         },
