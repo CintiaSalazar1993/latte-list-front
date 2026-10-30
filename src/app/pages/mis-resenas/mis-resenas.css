@@ -8,3 +8,4 @@ footer { display: flex; justify-content: space-between; align-items: center; gap
 .autor { font-size: var(--t-sm); color: var(--tinta-suave); }
 @media (max-width: 400px) { .lista { grid-template-columns: 1fr; } }
 .bloque-editar { display: flex; flex-wrap: wrap; gap: 4px 24px; }
+.lista > app-estado-vacio { grid-column: 1 / -1; }
