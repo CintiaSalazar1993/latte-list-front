@@ -48,8 +48,7 @@
                 <td data-label="Dueño">{{ c.duenioNombre }}</td>
                 <td data-label="Costo"><app-costo [valor]="c.costoPromedio" /></td>
                 <td data-label="Puntuación">
-                  {{ c.puntuacionPromedio !== null ? (c.puntuacionPromedio | number: '1.1-1') : '–' }}
-                </td>
+                  {{ formatearNumero(c.puntuacionPromedio) }}
                 <td data-label="Reseñas">{{ c.cantidadResenas }}</td>
                 <td class="derecha">
                   <a [routerLink]="['/cafes', c.id]" class="btn btn-texto btn-chico">Ver</a>

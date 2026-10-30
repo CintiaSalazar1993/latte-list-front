@@ -15,7 +15,7 @@
   } @else {
     <div class="resumen">
       <span><strong>{{ visibles().length }}</strong> {{ visibles().length === 1 ? 'reseña' : 'reseñas' }}</span>
-      <span class="promedio"><app-granos [valor]="promedio()" [tamanio]="18" /> <strong>{{ promedio() | number: '1.1-1' }}</strong> de promedio</span>
+      <span class="promedio"><app-granos [valor]="promedio()" [tamanio]="18" /> <strong>{{ formatearNumero(promedio()) }}</strong> de promedio</span>
       <label class="filtro">
         <span class="texto-chico texto-suave">Café</span>
         <select class="input" [(ngModel)]="cafeElegido">
@@ -37,7 +37,7 @@
           <p>{{ r.comentario }}</p>
           <footer>
             <span class="autor">{{ r.autor }}</span>
-            <span class="texto-chico texto-suave">{{ r.fecha | date: 'longDate' }}</span>
+            <span class="texto-chico texto-suave">{{ formatearFecha(r.fecha) }}</span>
           </footer>
         </article>
       }

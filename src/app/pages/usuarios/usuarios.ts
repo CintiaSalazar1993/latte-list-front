@@ -1,24 +1,27 @@
-import { DatePipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
+import { formatearFecha } from '../../utils/formato';
 import { Component, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EstadoVacio } from '../../components/estado-vacio/estado-vacio';
 import { Modal } from '../../components/modal/modal';
-import { TipoDeUsuario, Usuario } from '../../models/Usuario';
-import { RolPipe } from '../../pipes/etiqueta.pipe';
+import { ROLES_LABEL, TipoDeUsuario, Usuario } from '../../models/Usuario';
 import { AuthService } from '../../services/auth.service';
 import { ConfirmService } from '../../services/confirm.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { UsuarioService } from '../../services/usuario.service';
 import { mensajeError } from '../../utils/errores';
 
+
 /** RF19, RF20 y RF21: gestión de usuarios (alta, listado con filtros, detalle y baja). Solo ADMIN. */
 @Component({
   selector: 'app-usuarios',
-  imports: [FormsModule, ReactiveFormsModule, NgClass, DatePipe, Modal, EstadoVacio, RolPipe],
+  imports: [FormsModule, ReactiveFormsModule, NgClass, Modal, EstadoVacio],
   templateUrl: './usuarios.html',
   styleUrl: './usuarios.css',
 })
 export class Usuarios implements OnInit {
+  rolLabel = ROLES_LABEL;
+  formatearFecha = formatearFecha;
   usuarios = signal<Usuario[]>([]);
   cargando = signal(true);
   creando = signal(false);

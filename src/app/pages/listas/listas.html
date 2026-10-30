@@ -35,7 +35,7 @@
             </h2>
             <p class="texto-chico texto-suave">
               {{ l.cantidadCafes }} {{ l.cantidadCafes === 1 ? 'café' : 'cafés' }}
-              | creada el {{ l.fechaCreacion | date: 'shortDate' }}
+              | creada el {{ formatearFecha(l.fechaCreacion) }}
             </p>
           </a>
           @if (!l.favoritos) {

@@ -1,5 +1,5 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+
 import { RouterLink } from '@angular/router';
 import { ChartConfiguration } from 'chart.js';
 
@@ -11,17 +11,20 @@ import { MetricasService } from '../../services/metricas.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { ETIQUETA_LABEL } from '../../utils/etiquetas';
 import { mensajeError } from '../../utils/errores';
+import { formatearNumero } from '../../utils/formato';
 
 const MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 
 /** Panel del ADMIN: métricas globales del sistema con Chart.js (RF28). Las calcula el back. */
 @Component({
   selector: 'app-dashboard',
-  imports: [RouterLink, DecimalPipe, Grafico, Granos],
+  imports: [RouterLink, Grafico, Granos],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
+  formatearNumero = formatearNumero;
+  
   constructor(
     private metricasService: MetricasService,
     private notificaciones: NotificacionesService,

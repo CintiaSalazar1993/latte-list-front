@@ -41,7 +41,7 @@
             <span class="avatar" aria-hidden="true">{{ iniciales() }}</span>
             <span class="quien">
               <strong>{{ auth.usuario()?.nombre }}</strong>
-              <small>{{ auth.rol() | rol }}</small>
+              <small>{{ rolLabel[auth.rol()!] }}</small>
             </span>
           </a>
           <button type="button" class="btn btn-chico salir" (click)="salir()">Cerrar sesión</button>

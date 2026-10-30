@@ -1,4 +1,4 @@
-import { DatePipe, DecimalPipe, LowerCasePipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -12,7 +12,7 @@ import { TazaLogo } from '../../components/taza-logo/taza-logo';
 import { Cafe } from '../../models/Cafe';
 import { Lista } from '../../models/Lista';
 import { Resena, ResenaDetalle } from '../../models/Resena';
-import { CostoPipe, EtiquetaPipe } from '../../pipes/etiqueta.pipe';
+import { COSTO_LABEL, ETIQUETA_LABEL } from '../../utils/etiquetas';
 import { AuthService } from '../../services/auth.service';
 import { CafeService } from '../../services/cafe.service';
 import { ConfirmService } from '../../services/confirm.service';
@@ -20,18 +20,23 @@ import { ListaService } from '../../services/lista.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { ResenaService } from '../../services/resena.service';
 import { mensajeError } from '../../utils/errores';
+import { formatearFecha, formatearNumero } from '../../utils/formato';
 
 /** RF4 (ficha), RF8 (reseñar), RF10 (agregar a lista), RF11 (reseñas del café), RF16/18/22 (bajas). */
 @Component({
   selector: 'app-cafe-detalle',
   imports: [
-    ReactiveFormsModule, RouterLink, NgClass, DecimalPipe, DatePipe, LowerCasePipe,
-    TazaLogo, Granos, SelectorGranos, Costo, EstadoVacio, Grafico, EtiquetaPipe, CostoPipe,
+    ReactiveFormsModule, RouterLink, NgClass,
+      TazaLogo, Granos, SelectorGranos, Costo, EstadoVacio, Grafico,
   ],
   templateUrl: './cafe-detalle.html',
   styleUrl: './cafe-detalle.css',
 })
 export class CafeDetalle implements OnInit {
+  etiquetaLabel = ETIQUETA_LABEL;
+  costoLabel = COSTO_LABEL;
+  formatearFecha = formatearFecha;
+  formatearNumero = formatearNumero;
   cafe = signal<Cafe | null>(null);
   resenas = signal<Resena[]>([]);
   misResenasIds = signal<number[]>([]);

@@ -8,10 +8,10 @@
       <aside class="panel tarjeta-id">
         <div class="avatar" aria-hidden="true">{{ u.nombre[0] }}{{ u.apellido[0] }}</div>
         <h2>{{ u.nombre }} {{ u.apellido }}</h2>
-        <span class="chip">{{ u.tipoDeUsuario | rol }}</span>
+        <span class="chip">{{ rolLabel[u.tipoDeUsuario] }}</span>
         <dl>
           <div><dt>Email</dt><dd>{{ u.email }}</dd></div>
-          <div><dt>Miembro desde</dt><dd>{{ u.fechaAlta | date: 'longDate' }}</dd></div>
+          <div><dt>Miembro desde</dt><dd>{{ formatearFecha(u.fechaAlta) }}</dd></div>
         </dl>
       </aside>
 

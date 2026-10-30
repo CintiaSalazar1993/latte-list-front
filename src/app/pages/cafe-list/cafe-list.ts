@@ -4,21 +4,21 @@ import { Router, RouterLink } from '@angular/router';
 import { CafeCard } from '../../components/cafe-card/cafe-card';
 import { EstadoVacio } from '../../components/estado-vacio/estado-vacio';
 import { Cafe, CostoPromedio, Etiqueta, OrdenCafes } from '../../models/Cafe';
-import { EtiquetaPipe } from '../../pipes/etiqueta.pipe';
 import { AuthService } from '../../services/auth.service';
 import { CafeService } from '../../services/cafe.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
-import { GRUPOS_ETIQUETAS, COSTOS_CON_NOMBRE } from '../../utils/etiquetas';
+import { ETIQUETA_LABEL, GRUPOS_ETIQUETAS, COSTOS_CON_NOMBRE } from '../../utils/etiquetas';
 import { mensajeError } from '../../utils/errores';
 
 /** RF4, RF5, RF6, RF7 y RF24: listado de cafés con filtros, orden y café sorpresa. */
 @Component({
   selector: 'app-cafe-list',
-  imports: [FormsModule, RouterLink, CafeCard, EstadoVacio, EtiquetaPipe],
+  imports: [FormsModule, RouterLink, CafeCard, EstadoVacio],
   templateUrl: './cafe-list.html',
   styleUrl: './cafe-list.css',
 })
 export class CafeList implements OnInit {
+  etiquetaLabel = ETIQUETA_LABEL;
   cafes = signal<Cafe[]>([]);
   cargando = signal(true);
   error = signal('');

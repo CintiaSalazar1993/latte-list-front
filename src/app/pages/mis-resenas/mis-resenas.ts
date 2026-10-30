@@ -1,4 +1,5 @@
-import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
+import { formatearFecha, formatearNumero } from '../../utils/formato';
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -15,11 +16,13 @@ import { mensajeError } from '../../utils/errores';
 /** RF9 (ver mis reseñas), RF8 (baja) y RF23 (editar una reseña propia). */
 @Component({
   selector: 'app-mis-resenas',
-  imports: [RouterLink, DatePipe, DecimalPipe, NgClass, ReactiveFormsModule, Granos, EstadoVacio, Modal, SelectorGranos],
+  imports: [RouterLink, NgClass, ReactiveFormsModule, Granos, EstadoVacio, Modal, SelectorGranos],
   templateUrl: './mis-resenas.html',
   styleUrl: './mis-resenas.css',
 })
 export class MisResenas implements OnInit {
+  formatearFecha = formatearFecha;
+  formatearNumero = formatearNumero;
   resenas = signal<Resena[]>([]);
   cargando = signal(true);
   guardando = signal(false);

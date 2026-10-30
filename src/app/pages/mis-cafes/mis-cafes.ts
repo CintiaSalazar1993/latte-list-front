@@ -1,4 +1,4 @@
-import { DatePipe, DecimalPipe } from '@angular/common';
+
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { ChartConfiguration } from 'chart.js';
@@ -17,15 +17,18 @@ import { MetricasService } from '../../services/metricas.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { ResenaService } from '../../services/resena.service';
 import { mensajeError } from '../../utils/errores';
+import { formatearFecha, formatearNumero } from '../../utils/formato';
 
 /** Panel del DUENIO: sus cafés (CRUD), métricas y gráficos (RF17, RF18, RF25, RF26). */
 @Component({
   selector: 'app-mis-cafes',
-  imports: [RouterLink, DecimalPipe, DatePipe, TazaLogo, Granos, Costo, Grafico, EstadoVacio],
+  imports: [RouterLink, TazaLogo, Granos, Costo, Grafico, EstadoVacio],
   templateUrl: './mis-cafes.html',
   styleUrl: './mis-cafes.css',
 })
 export class MisCafes implements OnInit {
+  formatearFecha = formatearFecha;
+  formatearNumero = formatearNumero;
   cafes = signal<Cafe[]>([]);
   resenas = signal<Resena[]>([]);
   cargando = signal(true);

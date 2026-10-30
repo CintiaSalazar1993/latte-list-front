@@ -46,8 +46,8 @@
                   }
                 </td>
                 <td data-label="Email">{{ u.email }}</td>
-                <td data-label="Rol"><span class="rol" [attr.data-rol]="u.tipoDeUsuario">{{ u.tipoDeUsuario | rol }}</span></td>
-                <td data-label="Alta">{{ u.fechaAlta | date: 'dd/MM/yyyy' }}</td>
+                <td data-label="Rol"><span class="rol" [attr.data-rol]="u.tipoDeUsuario">{{ rolLabel[u.tipoDeUsuario] }}</span></td>
+                <td data-label="Alta">{{ formatearFecha(u.fechaAlta) }}</td>
                 <td class="acciones-celda">
                   <button type="button" class="btn btn-texto btn-chico" (click)="verDetalle(u)">Ver</button>
                   @if (!esYo(u)) {
@@ -123,8 +123,8 @@
       <div><dt>ID</dt><dd>{{ d.id }}</dd></div>
       <div><dt>Nombre</dt><dd>{{ d.nombre }} {{ d.apellido }}</dd></div>
       <div><dt>Email</dt><dd>{{ d.email }}</dd></div>
-      <div><dt>Rol</dt><dd>{{ d.tipoDeUsuario | rol }}</dd></div>
-      <div><dt>Fecha de alta</dt><dd>{{ d.fechaAlta | date: 'longDate' }}</dd></div>
+      <div><dt>Rol</dt><dd>{{ rolLabel[d.tipoDeUsuario] }}</dd></div>
+      <div><dt>Fecha de alta</dt><dd>{{ formatearFecha(d.fechaAlta) }}</dd></div>
     </dl>
     <div class="acciones" style="justify-content: flex-end">
       @if (!esYo(d)) {

@@ -1,7 +1,8 @@
 import { Component, signal } from '@angular/core';
-import { DatePipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RolPipe } from '../../pipes/etiqueta.pipe';
+import { ROLES_LABEL } from '../../models/Usuario';
+import { formatearFecha } from '../../utils/formato';
 import { ConfirmService } from '../../services/confirm.service';
 import { AuthService } from '../../services/auth.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
@@ -10,11 +11,13 @@ import { mensajeError } from '../../utils/errores';
 
 @Component({
   selector: 'app-perfil',
-  imports: [ReactiveFormsModule, NgClass, DatePipe, RolPipe],
+  imports: [ReactiveFormsModule, NgClass],
   templateUrl: './perfil.html',
   styleUrl: './perfil.css',
 })
 export class Perfil {
+  rolLabel = ROLES_LABEL;
+  formatearFecha = formatearFecha;
   guardando = signal(false);
 
   form = new FormGroup({

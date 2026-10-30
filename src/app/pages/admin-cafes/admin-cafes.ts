@@ -1,4 +1,4 @@
-import { DecimalPipe } from '@angular/common';
+import { formatearNumero } from '../../utils/formato';
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -11,16 +11,18 @@ import { ConfirmService } from '../../services/confirm.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { mensajeError } from '../../utils/errores';
 
+
 type Columna = 'nombre' | 'duenioNombre' | 'puntuacionPromedio' | 'cantidadResenas';
 
 /** RF16: el ADMIN da de alta cafés a nombre de un dueño y da de baja cualquier café. */
 @Component({
   selector: 'app-admin-cafes',
-  imports: [FormsModule, RouterLink, DecimalPipe, TazaLogo, Costo, EstadoVacio],
+  imports: [FormsModule, RouterLink, TazaLogo, Costo, EstadoVacio],
   templateUrl: './admin-cafes.html',
   styleUrl: './admin-cafes.css',
 })
 export class AdminCafes implements OnInit {
+  formatearNumero = formatearNumero;
   cafes = signal<Cafe[]>([]);
   cargando = signal(true);
   busqueda = signal('');

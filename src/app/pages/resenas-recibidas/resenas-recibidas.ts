@@ -1,4 +1,4 @@
-import { DatePipe, DecimalPipe } from '@angular/common';
+import { formatearFecha, formatearNumero } from '../../utils/formato';
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -12,11 +12,13 @@ import { mensajeError } from '../../utils/errores';
 /** RF26: el dueño ve las reseñas que reciben sus cafés. */
 @Component({
   selector: 'app-resenas-recibidas',
-  imports: [RouterLink, DatePipe, DecimalPipe, FormsModule, Granos, EstadoVacio],
+  imports: [RouterLink, FormsModule, Granos, EstadoVacio],
   templateUrl: './resenas-recibidas.html',
   styleUrl: './resenas-recibidas.css',
 })
 export class ResenasRecibidas implements OnInit {
+  formatearFecha = formatearFecha;
+  formatearNumero = formatearNumero;
   resenas = signal<Resena[]>([]);
   cargando = signal(true);
   cafeElegido = signal(0); // 0 = todos los cafés

@@ -11,7 +11,7 @@
     @if (cafe().puntuacionPromedio !== null) {
       <span class="puntaje">
         <app-granos [valor]="cafe().puntuacionPromedio" [tamanio]="16" />
-        <strong>{{ cafe().puntuacionPromedio | number: '1.1-1' }}</strong>
+        {{ formatearNumero(cafe().puntuacionPromedio) }}
         <span class="texto-suave">({{ cafe().cantidadResenas }})</span>
       </span>
     } @else {
@@ -23,7 +23,7 @@
   @if (etiquetasVisibles().length) {
     <div class="chips">
       @for (e of etiquetasVisibles(); track e) {
-        <span class="chip">{{ e | etiqueta }}</span>
+        <span class="chip">{{ etiquetaLabel[e] }}</span>
       }
       @if (restantes() > 0) {
         <span class="chip mas">+{{ restantes() }}</span>

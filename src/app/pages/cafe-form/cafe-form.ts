@@ -4,14 +4,13 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TazaLogo } from '../../components/taza-logo/taza-logo';
 import { CafeRequest, CostoPromedio, Etiqueta } from '../../models/Cafe';
-import { EtiquetaPipe } from '../../pipes/etiqueta.pipe';
 import { Usuario } from '../../models/Usuario';
 import { AuthService } from '../../services/auth.service';
 import { CafeService } from '../../services/cafe.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { UsuarioService } from '../../services/usuario.service';
 import { mensajeError } from '../../utils/errores';
-import { COSTOS_CON_NOMBRE, GRUPOS_ETIQUETAS } from '../../utils/etiquetas';
+import { COSTOS_CON_NOMBRE, ETIQUETA_LABEL, GRUPOS_ETIQUETAS } from '../../utils/etiquetas';
 
 // Mismas reglas que valida el backend
 const RE_DIRECCION = /^[\p{L}][\p{L}\s.]*\s\d+$/u;
@@ -21,11 +20,12 @@ const RE_INSTAGRAM = /^(https?:\/\/)?(www\.)?instagram\.com\/[A-Za-z0-9_.]+\/?$/
 /** Sirve para crear (/cafes/nuevo) y para editar (/cafes/:id/editar) un café. */
 @Component({
   selector: 'app-cafe-form',
-  imports: [ReactiveFormsModule, RouterLink, NgClass, TazaLogo, EtiquetaPipe],
+  imports: [ReactiveFormsModule, RouterLink, NgClass, TazaLogo],
   templateUrl: './cafe-form.html',
   styleUrl: './cafe-form.css',
 })
 export class CafeForm implements OnInit {
+  etiquetaLabel = ETIQUETA_LABEL;
   idCafe: number | null = null; // null = alta, con valor = edición
   costos = COSTOS_CON_NOMBRE;
   grupos = GRUPOS_ETIQUETAS;

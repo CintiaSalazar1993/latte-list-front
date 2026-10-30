@@ -20,7 +20,7 @@
         <div class="metricas">
           <div class="metrica">
             @if (c.puntuacionPromedio !== null) {
-              <strong class="numero">{{ c.puntuacionPromedio | number: '1.1-1' }}</strong>
+              <strong class="numero">{{ formatearNumero(c.puntuacionPromedio) }}</strong>
               <app-granos [valor]="c.puntuacionPromedio" [tamanio]="20" />
               <span class="texto-suave texto-chico">{{ c.cantidadResenas }} {{ c.cantidadResenas === 1 ? 'reseña' : 'reseñas' }}</span>
             } @else {
@@ -29,13 +29,13 @@
           </div>
           <div class="metrica">
             <app-costo [valor]="c.costoPromedio" />
-            <span class="texto-suave texto-chico">Costo {{ c.costoPromedio | costo | lowercase }}</span>
+            <span class="texto-suave texto-chico">Costo {{ costoLabel[c.costoPromedio].toLowerCase() }}</span>
           </div>
         </div>
 
         <div class="chips">
           @for (e of c.etiquetas; track e) {
-            <span class="chip">{{ e | etiqueta }}</span>
+            <span class="chip">{{ etiquetaLabel[e] }}</span>
           }
         </div>
 
@@ -161,7 +161,7 @@
                 @if (esMia(r)) {
                   <span class="chip chip-mia">Tuya</span>
                 }
-                <div class="texto-chico texto-suave">{{ r.fecha | date: 'longDate' }}</div>
+                <div class="texto-chico texto-suave">{{ formatearFecha(r.fecha) }}</div>
               </div>
               <app-granos [valor]="r.puntuacionGeneral" [tamanio]="17" />
             </header>

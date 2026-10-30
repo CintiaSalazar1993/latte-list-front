@@ -30,7 +30,7 @@
       </div>
       <div class="kpi destacado">
         @if (m.promedioGeneral !== null) {
-          <strong>{{ m.promedioGeneral | number: '1.2-2' }}</strong>
+          <strong>{{ formatearNumero(m.promedioGeneral, 2) }}</strong>
           <app-granos [valor]="m.promedioGeneral" [tamanio]="16" />
         } @else {
           <strong>–</strong>
@@ -67,7 +67,7 @@
             <li>
               <a [routerLink]="['/cafes', c.cafeId]">{{ c.nombre }}</a>
               <span class="puntaje">
-                <strong>{{ c.puntuacionPromedio | number: '1.1-1' }}</strong>
+                <strong>{{ formatearNumero(c.puntuacionPromedio) }}</strong>
                 <span class="texto-chico texto-suave">({{ c.cantidadResenas }})</span>
               </span>
             </li>

@@ -53,7 +53,7 @@
           </header>
           <p>{{ r.comentario }}</p>
           <footer>
-            <span class="autor">{{ r.autor }} · {{ r.fecha | date: 'shortDate' }}</span>
+            <span class="autor">{{ r.autor }} · {{ formatearFecha(r.fecha) }}</span>
             <button type="button" class="btn btn-peligro-texto btn-chico" (click)="eliminar(r)">Eliminar</button>
           </footer>
         </article>

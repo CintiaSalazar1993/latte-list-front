@@ -1,4 +1,4 @@
-import { DatePipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -10,15 +10,17 @@ import { ConfirmService } from '../../services/confirm.service';
 import { ListaService } from '../../services/lista.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { mensajeError } from '../../utils/errores';
+import { formatearFecha } from '../../utils/formato';
 
 /** CRUD de listas del CLIENTE (RF10, RF12, RF13). */
 @Component({
   selector: 'app-listas',
-  imports: [RouterLink, ReactiveFormsModule, NgClass, DatePipe, Modal, TazaLogo, EstadoVacio],
+  imports: [RouterLink, ReactiveFormsModule, NgClass, Modal, TazaLogo, EstadoVacio],
   templateUrl: './listas.html',
   styleUrl: './listas.css',
 })
 export class Listas implements OnInit {
+  formatearFecha = formatearFecha;
   listas = signal<Lista[]>([]);
   cargando = signal(true);
   guardando = signal(false);

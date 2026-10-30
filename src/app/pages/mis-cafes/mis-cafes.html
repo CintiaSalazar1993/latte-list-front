@@ -31,7 +31,7 @@
       </div>
       <div class="kpi destacado">
         @if (promedioGeneral() !== null) {
-          <strong>{{ promedioGeneral() | number: '1.1-1' }}</strong>
+          <strong>{{ formatearNumero(promedioGeneral()) }}</strong>
           <app-granos [valor]="promedioGeneral()" [tamanio]="18" />
         } @else {
           <strong>–</strong>
@@ -84,12 +84,12 @@
         <h2>Últimas reseñas</h2>
         @for (r of ultimas(); track r.id) {
           <article class="mini-resena">
-            <div class="fila">
+              <div class="fila">
               <strong>{{ r.autor }}</strong>
               <app-granos [valor]="r.puntuacionGeneral" [tamanio]="14" />
-            </div>
+              </div>
             <p>{{ r.comentario }}</p>
-            <span class="texto-chico texto-suave">{{ r.cafeNombre }} | {{ r.fecha | date: 'mediumDate' }}</span>
+            <span class="texto-chico texto-suave">{{ r.cafeNombre }} | {{ formatearFecha(r.fecha) }}</span>
           </article>
         } @empty {
           <p class="texto-suave">Todavía nadie reseñó tus cafés.</p>

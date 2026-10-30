@@ -112,7 +112,7 @@
                     [attr.aria-pressed]="etiquetas().includes(e)"
                     (click)="alternarEtiqueta(e)"
                   >
-                    {{ e | etiqueta }}
+                    {{ etiquetaLabel[e] }}
                   </button>
                 }
               </div>

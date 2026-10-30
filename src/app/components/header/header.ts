@@ -1,6 +1,6 @@
 import { Component, computed, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
-import { RolPipe } from '../../pipes/etiqueta.pipe';
+import { ROLES_LABEL } from '../../models/Usuario';
 import { AuthService } from '../../services/auth.service';
 
 interface Enlace {
@@ -11,11 +11,12 @@ interface Enlace {
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, RouterLinkActive, RolPipe],
+  imports: [RouterLink, RouterLinkActive],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })
 export class Header {
+  rolLabel = ROLES_LABEL;
   menuAbierto = signal(false);
 
   /** Los enlaces cambian según el rol: computed se recalcula solo cuando cambia la sesión. */

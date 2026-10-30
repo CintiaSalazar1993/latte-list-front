@@ -6,7 +6,7 @@
         <p>
           Escribiste {{ resenas().length }} {{ resenas().length === 1 ? 'reseña' : 'reseñas' }} sobre
           {{ cafesDistintos() }} {{ cafesDistintos() === 1 ? 'café' : 'cafés' }}. Tu puntuación promedio es
-          {{ promedio() | number: '1.1-1' }}.
+          {{ formatearNumero(promedio()) }}.
         </p>
       }
     </div>
@@ -24,7 +24,7 @@
           </header>
           <p>{{ r.comentario }}</p>
           <footer>
-            <span class="texto-chico texto-suave">{{ r.fecha | date: 'longDate' }}</span>
+            <span class="texto-chico texto-suave">{{ formatearFecha(r.fecha) }}</span>
             <span class="acciones">
               <button type="button" class="btn btn-texto btn-chico" (click)="editar(r)">Editar</button>
               <button type="button" class="btn btn-peligro-texto btn-chico" (click)="eliminar(r)">Eliminar</button>

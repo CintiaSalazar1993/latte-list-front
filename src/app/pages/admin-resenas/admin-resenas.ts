@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+
 import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -11,15 +11,17 @@ import { ConfirmService } from '../../services/confirm.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { ResenaService } from '../../services/resena.service';
 import { mensajeError } from '../../utils/errores';
+import { formatearFecha } from '../../utils/formato';
 
 /** RF27 (ver y filtrar todas las reseñas) y RF22 (baja de reseñas). Solo ADMIN. */
 @Component({
   selector: 'app-admin-resenas',
-  imports: [FormsModule, RouterLink, DatePipe, Granos, EstadoVacio],
+  imports: [FormsModule, RouterLink, Granos, EstadoVacio],
   templateUrl: './admin-resenas.html',
   styleUrl: './admin-resenas.css',
 })
 export class AdminResenas implements OnInit {
+  formatearFecha = formatearFecha;
   resenas = signal<Resena[]>([]);
   cafes = signal<Cafe[]>([]);
   cargando = signal(true);
