@@ -12,20 +12,16 @@ export class CafeService {
   constructor(private http: HttpClient) {}
 
   getCafes(filtro: FiltroCafes = {}) {
-    let params = new HttpParams();
-    if (filtro.nombre) params = params.set('nombre', filtro.nombre);
-    if (filtro.costo) params = params.set('costo', filtro.costo);
-    if (filtro.orden) params = params.set('orden', filtro.orden);
-    if (filtro.etiquetas && filtro.etiquetas.length > 0) params = params.set('etiquetas', filtro.etiquetas.join(','));
-    return this.http.get<Cafe[]>(this.url, { params });
+    return this.http.get<Cafe[]>(this.url, { params: this.armarParams(filtro) });
   }
 
   getMisCafes() {
     return this.http.get<Cafe[]>(`${this.url}/mis-cafes`);
   }
 
-  getCafeAleatorio() {
-    return this.http.get<Cafe>(`${this.url}/aleatorio`);
+  /** RF24: café al azar entre los que cumplen los filtros (si no se pasan, entre todos). */
+  getCafeAleatorio(filtro: FiltroCafes = {}) {
+    return this.http.get<Cafe>(`${this.url}/aleatorio`, { params: this.armarParams(filtro) });
   }
 
   getCafeById(id: number) {
@@ -42,5 +38,15 @@ export class CafeService {
 
   deleteCafe(id: number) {
     return this.http.delete<void>(`${this.url}/${id}`);
+  }
+
+  /** Arma los query params (?nombre=&costo=&etiquetas=&orden=) a partir de los filtros. */
+  private armarParams(filtro: FiltroCafes): HttpParams {
+    let params = new HttpParams();
+    if (filtro.nombre) params = params.set('nombre', filtro.nombre);
+    if (filtro.costo) params = params.set('costo', filtro.costo);
+    if (filtro.orden) params = params.set('orden', filtro.orden);
+    if (filtro.etiquetas && filtro.etiquetas.length > 0) params = params.set('etiquetas', filtro.etiquetas.join(','));
+    return params;
   }
 }

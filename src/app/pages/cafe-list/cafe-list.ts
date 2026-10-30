@@ -87,18 +87,20 @@ export class CafeList implements OnInit {
     this.traerCafes();
   }
 
-  /** RF24: un café al azar. */
+  /** RF24: un café al azar entre los que cumplen los filtros actuales. */
   sorpresa() {
     this.sorteando.set(true);
-    this.cafeService.getCafeAleatorio().subscribe({
-      next: (cafe) => {
-        this.notificaciones.info(`Hoy te toca: ${cafe.nombre}`);
-        this.router.navigate(['/cafes', cafe.id]);
-      },
-      error: (e) => {
-        this.notificaciones.error(mensajeError(e));
-        this.sorteando.set(false);
-      },
-    });
+    this.cafeService
+      .getCafeAleatorio({ nombre: this.nombre().trim(), costo: this.costo(), etiquetas: this.etiquetas() })
+      .subscribe({
+        next: (cafe) => {
+          this.notificaciones.info(`Hoy te toca: ${cafe.nombre}`);
+          this.router.navigate(['/cafes', cafe.id]);
+        },
+        error: (e) => {
+          this.notificaciones.error(mensajeError(e));
+          this.sorteando.set(false);
+        },
+      });
   }
 }
