@@ -15,6 +15,7 @@ import { Resena, ResenaDetalle } from '../../models/Resena';
 import { COSTO_LABEL, ETIQUETA_LABEL } from '../../utils/etiquetas';
 import { AuthService } from '../../services/auth.service';
 import { CafeService } from '../../services/cafe.service';
+import { FiltrosCafesService } from '../../services/filtros-cafes.service';
 import { ConfirmService } from '../../services/confirm.service';
 import { ListaService } from '../../services/lista.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
@@ -97,6 +98,7 @@ export class CafeDetalle implements OnInit {
     private listaService: ListaService,
     private notificaciones: NotificacionesService,
     private confirm: ConfirmService,
+    public filtrosCafes: FiltrosCafesService, // últimos filtros de "Explorar", para el link de volver
   ) {}
 
   ngOnInit(): void {

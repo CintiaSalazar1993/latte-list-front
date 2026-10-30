@@ -1,13 +1,14 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterLink } from '@angular/router';
 import { CafeCard } from '../../components/cafe-card/cafe-card';
 import { EstadoVacio } from '../../components/estado-vacio/estado-vacio';
 import { Cafe, CostoPromedio, Etiqueta, OrdenCafes } from '../../models/Cafe';
 import { AuthService } from '../../services/auth.service';
 import { CafeService } from '../../services/cafe.service';
+import { FiltrosCafesService } from '../../services/filtros-cafes.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
-import { ETIQUETA_LABEL, GRUPOS_ETIQUETAS, COSTOS_CON_NOMBRE } from '../../utils/etiquetas';
+import { ETIQUETA_LABEL, GRUPOS_ETIQUETAS, COSTOS_CON_NOMBRE, TODAS_LAS_ETIQUETAS } from '../../utils/etiquetas';
 import { mensajeError } from '../../utils/errores';
 
 /** RF4, RF5, RF6, RF7 y RF24: listado de cafés con filtros, orden y café sorpresa. */
@@ -41,13 +42,17 @@ export class CafeList implements OnInit {
     private cafeService: CafeService,
     private notificaciones: NotificacionesService,
     private router: Router,
+    private route: ActivatedRoute, // sirve para leer los filtros de la URL (?costo=$$&etiquetas=...)
+    private filtrosCafes: FiltrosCafesService,
   ) {}
 
   ngOnInit(): void {
+    this.leerFiltrosDeUrl();
     this.traerCafes();
   }
 
   traerCafes() {
+    this.guardarFiltrosEnUrl();
     this.cargando.set(true);
     this.error.set('');
     this.cafeService
@@ -85,6 +90,35 @@ export class CafeList implements OnInit {
     this.costo.set('');
     this.etiquetas.set([]);
     this.traerCafes();
+  }
+
+  /** Carga los filtros desde la URL. Ignora valores inválidos (por ejemplo, una etiqueta que no existe). */
+  private leerFiltrosDeUrl() {
+    const q = this.route.snapshot.queryParamMap;
+    this.nombre.set(q.get('nombre') ?? '');
+
+    const costo = q.get('costo');
+    this.costo.set(this.costos.some((c) => c.valor === costo) ? (costo as CostoPromedio) : '');
+
+    const etiquetas = (q.get('etiquetas') ?? '')
+      .split(',')
+      .filter((e): e is Etiqueta => TODAS_LAS_ETIQUETAS.includes(e as Etiqueta));
+    this.etiquetas.set(etiquetas);
+
+    const orden = q.get('orden');
+    this.orden.set(orden === 'puntuacion' || orden === 'costo' ? orden : 'nombre');
+  }
+
+  /** Escribe los filtros en la URL (sin sumar pasos al historial) y los recuerda para "Volver a explorar". */
+  private guardarFiltrosEnUrl() {
+    const queryParams: Params = {
+      nombre: this.nombre().trim() || null, // null = el parámetro no aparece en la URL
+      costo: this.costo() || null,
+      etiquetas: this.etiquetas().length ? this.etiquetas().join(',') : null,
+      orden: this.orden() !== 'nombre' ? this.orden() : null,
+    };
+    this.router.navigate([], { relativeTo: this.route, queryParams, replaceUrl: true });
+    this.filtrosCafes.ultimos.set(Object.fromEntries(Object.entries(queryParams).filter(([, v]) => v !== null)));
   }
 
   /** RF24: un café al azar entre los que cumplen los filtros actuales. */

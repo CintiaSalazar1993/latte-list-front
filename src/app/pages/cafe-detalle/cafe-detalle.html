@@ -1,5 +1,5 @@
 <div class="contenedor pagina">
-  <a routerLink="/cafes" class="volver">‹ Volver a explorar</a>
+  <a routerLink="/cafes" [queryParams]="filtrosCafes.ultimos()" class="volver">‹ Volver a explorar</a>
 
   @if (cargando()) {
     <div class="skeleton" style="height: 260px; margin-top: 16px"></div>
