@@ -46,6 +46,11 @@ export class AuthService {
     return this.http.post<AuthResponse>(`${this.url}/login`, { email, contrasena }).pipe(tap((r) => this.guardarSesion(r)));
   }
 
+  /** Le pregunta al back si el token sigue siendo válido (usa un endpoint protegido). */
+  validarToken() {
+    return this.http.get<Usuario>(`${API_URL}/usuarios/me`);
+  }
+
   registrar(usuario: UsuarioRequest) {
     return this.http.post<AuthResponse>(`${this.url}/register`, usuario).pipe(tap((r) => this.guardarSesion(r)));
   }

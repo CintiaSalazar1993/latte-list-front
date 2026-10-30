@@ -1,5 +1,7 @@
 import { Routes } from '@angular/router';
-import { authGuard, invitadoGuard, rolGuard } from './guards/guards';
+import { authGuard } from './guards/auth-guard';
+import { invitadoGuard } from './guards/invitado-guard';
+import { rolGuard } from './guards/rol-guard';
 import { Home } from './pages/home/home';
 import { NoEncontrada } from './pages/errores/errores';
 import { AdminCafes } from './pages/admin-cafes/admin-cafes';

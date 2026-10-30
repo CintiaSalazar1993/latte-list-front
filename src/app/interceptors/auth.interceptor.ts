@@ -1,26 +1,29 @@
-import { HttpErrorResponse, HttpInterceptorFn } from '@angular/common/http';
+import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
-/**
- * Se ejecuta en TODAS las peticiones HTTP:
- *  - agrega el token JWT en el header Authorization
- *  - si el backend responde 401 (token vencido), cierra la sesión
- */
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
-  const esLoginORegistro = req.url.includes('/auth/login') || req.url.includes('/auth/register');
+  const token = auth.token();
 
-  let peticion = req;
-  if (auth.token() && !esLoginORegistro) {
-    peticion = req.clone({ setHeaders: { Authorization: `Bearer ${auth.token()}` } });
-  }
+  // Si hay token, copio el pedido y le agrego el header Authorization
+  const request = token
+    ? req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+    : req;
 
-  return next(peticion).pipe(
-    catchError((e: HttpErrorResponse) => {
-      if (e.status === 401 && !esLoginORegistro) auth.sesionExpirada();
-      return throwError(() => e);
-    }),
+  return next(request).pipe(
+    catchError((error: HttpErrorResponse) => {
+      // 401 con token: venció la sesión, la cierro y vuelvo al login
+      if (error.status === 401 && token) {
+        auth.sesionExpirada();
+      }
+
+      return throwError(() => error);
+    })
   );
 };
