@@ -117,9 +117,16 @@
           }
         </div>
 
-        @if (auth.tieneRol('CLIENTE')) {
+        @if (auth.tieneRol('CLIENTE') && yaResenado()) {
+          <!-- Ya reseñó: el back no permite una segunda reseña, así que lo mandamos a editar la suya -->
+          <div class="panel">
+            <h2>Ya reseñaste este café</h2>
+            <p class="texto-suave">Podés cambiar tu puntaje o tu comentario cuando quieras.</p>
+            <a routerLink="/mis-resenas" class="btn btn-borde">Editar mi reseña</a>
+          </div>
+        } @else if (auth.tieneRol('CLIENTE')) {
           <form class="panel form-resena" [formGroup]="form" (ngSubmit)="publicarResena()" novalidate>
-            <h2>{{ yaResenado() ? 'Contá otra visita' : 'Dejá tu reseña' }}</h2>
+            <h2>Dejá tu reseña</h2>
             @if (errorResena()) {
               <div class="alerta" role="alert">{{ errorResena() }}</div>
             }
