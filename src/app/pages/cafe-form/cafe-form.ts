@@ -7,6 +7,7 @@ import { CafeRequest, CostoPromedio, Etiqueta } from '../../models/Cafe';
 import { Usuario } from '../../models/Usuario';
 import { AuthService } from '../../services/auth.service';
 import { CafeService } from '../../services/cafe.service';
+import { ImagenService } from '../../services/imagen.service';
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { UsuarioService } from '../../services/usuario.service';
 import { mensajeError } from '../../utils/errores';
@@ -61,6 +62,7 @@ export class CafeForm implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private cafeService: CafeService,
+    private imagenService: ImagenService,
     private usuarioService: UsuarioService,
     private notificaciones: NotificacionesService,
   ) {}
@@ -177,12 +179,21 @@ export class CafeForm implements OnInit {
     }
     this.procesandoLogo.set(true);
     try {
-      this.form.controls.logo.setValue(await achicarImagen(archivo));
-      this.form.controls.logo.markAsTouched();
-      this.mostrarLink.set(false);
+      const imagenChica = await achicarImagen(archivo);
+      this.imagenService.subirLogo(imagenChica).subscribe({
+        next: (urlLogo) => {
+          this.form.controls.logo.setValue(urlLogo);
+          this.form.controls.logo.markAsTouched();
+          this.mostrarLink.set(false);
+          this.procesandoLogo.set(false);
+        },
+        error: () => {
+          this.errorLogo.set('No pudimos subir la imagen. Probá de nuevo.');
+          this.procesandoLogo.set(false);
+        },
+      });
     } catch (e) {
       this.errorLogo.set(e instanceof Error ? e.message : 'No pudimos leer esa imagen.');
-    } finally {
       this.procesandoLogo.set(false);
     }
   }
